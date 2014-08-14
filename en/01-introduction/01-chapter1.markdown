@@ -1,6 +1,6 @@
 # Getting Started #
 
-This chapter will be about getting started with Git.  We will begin at the beginning by explaining some background on version control tools, then move on to how to get Git running on your system and finally how to get it setup to start working with.  At the end of this chapter you should understand why Git is around, why you should use it and you should be all setup to do so.
+This chapter will be about getting started with Git.  We will begin by explaining some background on version control tools, then move on to how to get Git running on your system and finally how to get it set up to start working with.  At the end of this chapter you should understand why Git is around, why you should use it and you should be all set up to do so.
 
 ## About Version Control ##
 
@@ -153,7 +153,7 @@ After this is done, you can also get Git via Git itself for updates:
 
 If you want to install Git on Linux via a binary installer, you can generally do so through the basic package-management tool that comes with your distribution. If you’re on Fedora, you can use yum:
 
-	$ yum install git-core
+	$ yum install git
 
 Or if you’re on a Debian-based distribution like Ubuntu, try apt-get:
 
@@ -178,11 +178,11 @@ You don’t have to add all the extras, but you’ll probably want to include +s
 
 Installing Git on Windows is very easy. The msysGit project has one of the easier installation procedures. Simply download the installer exe file from the GitHub page, and run it:
 
-	http://msysgit.github.com/
+	http://msysgit.github.io
 
 After it’s installed, you have both a command-line version (including an SSH client that will come in handy later) and the standard GUI.
 
-Note on Windows usage: you should use Git with the provided msysGit shell (Unix style), it allows to use the complex lines of command given in this book. If you need, for some reason, to use the native Windows shell / command line console, you have to use double quotes instead of simple quotes (for parameters with spaces in them) and you must quote the parameters ending with the circumflex accent (^) if they are last on the line, as it is a continuation symbol in Windows.
+Note on Windows usage: you should use Git with the provided msysGit shell (Unix style), it allows to use the complex lines of command given in this book. If you need, for some reason, to use the native Windows shell / command line console, you have to use double quotes instead of single quotes (for parameters with spaces in them) and you must quote the parameters ending with the circumflex accent (^) if they are last on the line, as it is a continuation symbol in Windows.
 
 ## First-Time Git Setup ##
 

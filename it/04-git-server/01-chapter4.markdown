@@ -111,7 +111,7 @@ Un'altra cosa carina è che l'HTTP è un protocollo comunissimo che i firewall d
 
 L'altra faccia della medaglia nel fornire il tuo repository via HTTP è che è relativamente inefficiente per il client. In genere porta via molto tempo per clonare o scaricare dal repository, e si ha spesso un sovraccarico della rete tramite il trasferimento di volumi via HTTP rispetto ad altri protocolli di rete. Non essendo abbastanza intelligente da trasferire solo i dati di cui hai bisogno — non c'è un lavoro dinamico dalla parte del server in questa transazione — il protocollo HTTP viene spesso definito un protocollo _stupido_. Per maggiori informazioni sulle differenze nell'efficienza tra il protocollo HTTP e gli altri, vedi il Capitolo 9.
 
-## Ottenere Git su di un Server ##
+## Mettere Git su di un server ##
 
 Per inizializzare un qualsiasi server Git, devi esportare un repository esistente in un nuovo repository di soli dati — cioè un repository che non contiene la directory di lavoro. Questo è generalmente molto semplice da fare.
 Per clonare il tuo repository per creare un nuovo repository di soli dati, devi avviare il comando clone con l'opzione `--bare`. Convenzionalmente, un repository di soli dati in finisce in `.git`, ad esempio:
@@ -231,15 +231,14 @@ L'autenticazione tramite chiavi SSH generalmente richiede una restrizione dei di
  
  	$ chmod -R go= ~/.ssh
  
-
- Ora, puoi impostare un repository vuoto avviando `git init` con l'opzione `--bare`, che inizializza il repository senza la directory di lavoro:
+Ora, puoi configurargli un repository vuoto eseguendo `git init` con l'opzione `--bare`, che inizializza il repository senza la directory di lavoro:
 
 	$ cd /opt/git
 	$ mkdir project.git
 	$ cd project.git
 	$ git --bare init
 
-Poi, John, Josie o Jessica possono inviare la prima versione del loro progetto nel repository aggiungendolo come ramo remoto ed inviandolo su di un ramo. Nota che qualcuno deve accedere via shell alla macchina e creare un repository base ogni volta che si vuole aggiungere un progetto. Usiamo il nome `gitserver` per il server dove hai impostato il tuo utente 'git' ed il repository. Se lo stai usando nella rete interna e hai impostato un DNS con il punto `gitserver` per puntare a questo server, allora puoi usare il comando:
+E John, Josie o Jessica possono inviare la prima versione del loro progetto nel repository aggiungendolo come ramo remoto ed inviandolo su di un ramo. Fai attenzione che ogni volta che vuoi aggiungere un progetto, qualcuno deve accedere via shell alla macchina e creare un repository base. Usiamo il nome `gitserver` per il server dove hai impostato il tuo utente 'git' ed il repository. Se lo stai usando nella rete interna e hai impostato un DNS con il punto `gitserver` per puntare a questo server, allora puoi usare il comando:
 
 	# sul computer di Johns
 	$ cd myproject

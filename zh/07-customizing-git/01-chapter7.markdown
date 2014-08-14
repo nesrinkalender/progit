@@ -142,7 +142,7 @@ P4Merge可以在所有主流平台上运行，现在开始大胆尝试吧。对�
 
 下载P4Merge：
 
-	http://www.perforce.com/perforce/downloads/component.html
+	http://www.perforce.com/product/components/perforce-visual-merge-and-diff-tools
 
 首先把你要运行的命令放入外部包装脚本中，我会使用Mac系统上的路径来指定该脚本的位置，在其他系统上，它应该被放置在二进制文件`p4merge`所在的目录中。创建一个merge包装脚本，名字叫作`extMerge`，让它带参数调用`p4merge`二进制文件：
 
@@ -251,7 +251,7 @@ Git预先设置了一些选项来探测和修正空白问题，其4种主要选�
 
 	$ git apply --whitespace=fix <patch>
 
-这些选项也能运用于衍合。如果提交了有空白问题的文件但还没推送到上流，你可以运行带有`--whitespace=fix`选项的`rebase`来让Git在重写补丁时自动修正它们。
+这些选项也能运用于衍合。如果提交了有空白问题的文件但还没推送到上游，你可以运行带有`--whitespace=fix`选项的`rebase`来让Git在重写补丁时自动修正它们。
 
 ### 服务器端配置 ###
 
@@ -313,7 +313,7 @@ Git默认情况下不会在推送期间检查所有对象的一致性。虽然�
 
 边注：有一些二进制文件虽然包含文字，但是却难以转换。（译注：例如 Word 文档。）在这些情况，你可以尝试使用 `strings` 工具来获取其中的文字。但如果当这些文档包含 UTF-16 编码，或者其他代码页（codepages），`strings` 也可能无补于事。`strings` 在大部分的 Mac 和 Linux 下都有安装。当遇到有二进制文件需要转换的时候，你可以试试这个工具。
 
-##### MS Word files #####
+##### Word文档 #####
 
 这个特性很酷，而且鲜为人知，因此我会结合实例来讲解。首先，要解决的是最令人头疼的问题：对Word文档进行版本控制。很多人对Word文档又恨又爱，如果想对其进行版本控制，你可以把文件加入到 Git 库中，每次修改后提交即可。但这样做没有一点实际意义，因为运行`git diff`命令后，你只能得到如下的结果：
 
@@ -351,23 +351,23 @@ Git默认情况下不会在推送期间检查所有对象的一致性。虽然�
 	-system for non-linear development.
 	+system for non-linear development (See Chapter 3).
 
-Git 成功且简洁地显示出我增加的文本"Let’s see if this works"。虽然有些瑕疵，在末尾显示了一些随机的内容，但确实可以比较了。如果你能找到或自己写个Word到纯文本的转换器的话，效果可能会更好。 `strings`可以在大部分Mac和Linux系统上运行，所以它是处理二进制格式的第一选择。
+Git 成功且简洁地显示出我增加的文本"(See Chapter 3)"。工作的很完美！
 
-##### OpenDocument Text files #####
+##### OpenDocument文本文档 #####
 
-The same approach that we used for MS Word files (`*.doc`) can be used for OpenDocument Text files (`*.odt`) created by OpenOffice.org.
+我们用于处理Word文档（`*.doc`）的方法同样适用于处理OpenOffice.org创建的OpenDocument文本文档（`*.odt`）。
 
-Add the following line to your `.gitattributes` file:
+把下面这行添加到`.gitattributes`文件：
 
 	*.odt diff=odt
 
-Now set up the `odt` diff filter in `.git/config`:
+然后在`.git/config` 文件中设置`odt`过滤器：
 
 	[diff "odt"]
 		binary = true
 		textconv = /usr/local/bin/odt-to-txt
 
-OpenDocument files are actually zip’ped directories containing multiple files (the content in an XML format, stylesheets, images, etc.). We’ll need to write a script to extract the content and return it as plain text. Create a file `/usr/local/bin/odt-to-txt` (you are free to put it into a different directory) with the following content:
+OpenDocument文档实际上是多个文件（包括一个XML文件和表格、图片等文件）的压缩包。我们需要写一个脚本来提取其中纯文本格式的内容。创建一个文件`/usr/local/bin/odt-to-txt`（你也可以放到其他目录下），写入下面内容：
 
 	#! /usr/bin/env perl
 	# Simplistic OpenDocument Text (.odt) to plain text converter.
@@ -397,13 +397,13 @@ OpenDocument files are actually zip’ped directories containing multiple files 
 	s/\A\n+//;                         # remove leading blank lines
 	print "\n", $_, "\n\n";
 
-And make it executable
+然后把它设为可执行文件
 
 	chmod +x /usr/local/bin/odt-to-txt
 
-Now `git diff` will be able to tell you what changed in `.odt` files.
+现在`git diff`命令就可以显示`.odt`文件的变更了。
 
-##### Image files #####
+##### 图像文件 #####
 
 你还能用这个方法比较图像文件。当比较时，对JPEG文件运用一个过滤器，它能提炼出EXIF信息 — 大部分图像格式使用的元数据。如果你下载并安装了`exiftool`程序，可以用它参照元数据把图像转换成文本。比较的不同结果将会用文本向你展示：
 
@@ -819,7 +819,7 @@ update 脚本和 `pre-receive` 脚本十分类似。不同之处在于它会为�
 
 ### 客户端挂钩 ###
 
-这种手段的缺点在于用户推送内容遭到拒绝后几乎无法避免的抱怨。辛辛苦苦写成的代码在最后时刻惨遭拒绝是十分悲剧切具迷惑性的；更可怜的是他们不得不修改提交历史来解决问题，这怎么也算不上王道。
+这种手段的缺点在于用户推送内容遭到拒绝后几乎无法避免的抱怨。辛辛苦苦写成的代码在最后时刻惨遭拒绝是十分悲剧且具有迷惑性的；更可怜的是他们不得不修改提交历史来解决问题，这怎么也算不上王道。
 
 逃离这种两难境地的法宝是给用户一些客户端的挂钩，在他们作出可能悲剧的事情的时候给以警告。然后呢，用户们就能在提交--问题变得更难修正之前解除隐患。由于挂钩本身不跟随克隆的项目副本分发，所以必须通过其他途径把这些挂钩分发到用户的 .git/hooks 目录并设为可执行文件。虽然可以在相同或单独的项目内 容里加入并分发它们，全自动的解决方案是不存在的。
 

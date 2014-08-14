@@ -6,7 +6,7 @@ Spuštění serveru Git je jednoduché. Nejprve určíte, jakými protokoly má 
 
 Pokud víte, že nebudete chtít spravovat vlastní server, můžete přeskočit rovnou na poslední část této kapitoly a podívat se na možnosti nastavení hostovaného účtu. Pak přejděte na následující kapitolu, v níž se dočtete o různých vstupech a výstupech při práci v prostředí s distribuovanou správou zdrojového kódu.
 
-Vzdálený repozitář je obvykle holý repozitář, tj. repozitář Git bez pracovního adresáře. Protože se repozitář používá pouze jako místo pro spolupráci, není žádný důvod, aby byl na disku načten konkrétní snímek. Jsou tu pouze uložena data systému Git. Jednoduše bychom mohli také říct, že holý repozitář je obsah adresáře `.git` vašeho projektu a nic víc.
+Vzdálený repozitář je obvykle *holý repozitář* (bare repository), tj. repozitář Git bez pracovního adresáře. Protože se repozitář používá pouze jako místo pro spolupráci, není žádný důvod, aby byl na disku načten konkrétní snímek. Jsou tu pouze uložena data systému Git. Jednoduše bychom mohli také říct, že holý repozitář je obsah adresáře `.git` vašeho projektu a nic víc.
 
 ## Protokoly ##
 
@@ -16,7 +16,7 @@ Neměli bychom zamlčet ani to, že s výjimkou protokolu HTTP všechny vyžaduj
 
 ### Protokol Local ###
 
-Nejzákladnější variantou je protokol Local, v němž je vzdálený repozitář uložen v jiném adresáři na disku. Často se využívá v případech, kdy mají všichni z vašeho týmu přístup k vašim sdíleným souborům, např. přes připojení systému NFS, nebo – v méně pravděpodobném případě – se všichni přihlašují na jednom počítači. Tato druhá varianta není právě ideální, protože všechny instance repozitáře s kódem jsou v takovém případě umístěny v jednom počítači, čímž se zvyšuje riziko nevratné ztráty dat.
+Nejzákladnější variantou je *lokální protokol* (Local protocol), v němž je vzdálený repozitář uložen v jiném adresáři na disku. Často se využívá v případech, kdy mají všichni z vašeho týmu přístup k vašim sdíleným souborům, např. přes připojení systému NFS, nebo – v méně pravděpodobném případě – se všichni přihlašují na jednom počítači. Tato druhá varianta není právě ideální, protože všechny instance repozitáře s kódem jsou v takovém případě umístěny v jednom počítači, čímž se zvyšuje riziko nevratné ztráty dat.
 
 Máte-li připojený sdílený systém souborů, můžete klonovat, odesílat a stahovat z lokálního souborového repozitáře (local file-based repository). Chcete-li takový repozitář naklonovat nebo přidat jako vzdálený repozitář do existujícího projektu, použijte jako URL cestu k repozitáři. K naklonování lokálního repozitáře můžete použít příkaz například v tomto tvaru:
 
@@ -109,7 +109,7 @@ Z dalších výhod protokolu HTTP bychom mohli jmenovat i jeho značné rozší�
 
 #### Nevýhody ####
 
-Nevýhodou obsluhy repozitáře přes protokol HTTP je poměrně nízká výkonnost pro klienta. Klonovat nebo vyzvedávat data z repozitáře trvá v případě protokolu HTTP obecně mnohem déle a vyžádá si většinou podstatně větší režii síťových operací a objem přenášených dat, než je tomu u ostatních síťových protokolů. Protože protokol není natolik inteligentní, aby přenášel pouze data, která potřebujete – v těchto transakcích se na straně serveru nesetkáte s dynamickou činností – je protokol HTTP často nazýván „dumb protocol“ (hloupý protokol). Více informací o rozdílech ve výkonnosti mezi protokolem HTTP a ostatními protokoly najdete v kapitole 9.
+Nevýhodou obsluhy repozitáře přes protokol HTTP je poměrně nízká výkonnost pro klienta. Klonovat nebo vyzvedávat data z repozitáře trvá v případě protokolu HTTP obecně mnohem déle a vyžádá si většinou podstatně větší režii síťových operací a objem přenášených dat, než je tomu u ostatních síťových protokolů. Protože protokol není natolik inteligentní, aby přenášel pouze data, která potřebujete – v těchto transakcích se na straně serveru nesetkáte s dynamickou činností – je protokol HTTP často nazýván *dumb protocol* (hloupý protokol). Více informací o rozdílech ve výkonnosti mezi protokolem HTTP a ostatními protokoly najdete v kapitole 9.
 
 ## Jak umístit Git na server ##
 
@@ -117,9 +117,10 @@ Pro úvodní nastavení serveru Git je třeba exportovat existující repozitá�
 Chcete-li naklonovat stávající repozitář, a vytvořit tak nový a holý, zadejte příkaz clone s parametrem `--bare`. Je zvykem, že adresáře s holým repozitářem končí na `.git`, například:
 
 	$ git clone --bare my_project my_project.git
-	Initialized empty Git repository in /opt/projects/my_project.git/
+	Cloning into bare repository 'my_project.git'...
+	done.
 
-Výstup tohoto příkazu je trochu nejasný. Protože příkaz `clone` znamená v podstatě `git init` a následně `git fetch`, vidíme z části `git init`, která vytvoří prázdný adresář, nějaký výstup. Následný přenos objektu neposkytuje žádný výstup, přesto však proběhl. V adresáři `my_project.git` byste nyní měli mít kopii dat z adresáře Git.
+V adresáři `my_project.git` byste nyní měli mít kopii dat z adresáře Git.
 
 Je to přibližně stejné, jako byste zadali například:
 
@@ -147,7 +148,7 @@ Vidíte, jak je jednoduché vzít repozitář Git, vytvořit jeho holou verzi a 
 
 A to je skutečně vše, co je třeba ke spuštění serveru Git, k němuž bude mít přístup více lidí – na server stačí přidat SSH účty a umístit holý repozitář někam, kam budou mít všichni uživatelé oprávnění ke čtení i zápisu. Vše je připraveno, nic dalšího se od vás nevyžaduje.
 
-V dalších částech se podíváme na některé pokročilé možnosti nastavení. Dozvíte se v nich, jak se vyhnout nutnosti vytvářet uživatelské účty pro všechny uživatele, jak k repozitářům přiřadit veřejné oprávnění pro čtení, jak nastavit webová rozhraní nebo k čemu se používá nástroj Gitosis. To však nemění nic na tom, že ke spolupráci se skupinou lidí na soukromém projektu vystačíte s jedním SSH serverem a holým repozitářem.
+V dalších částech se podíváme na některé pokročilé možnosti nastavení. Dozvíte se v nich, jak se vyhnout nutnosti vytvářet uživatelské účty pro všechny uživatele, jak k repozitářům přiřadit veřejné oprávnění pro čtení, jak nastavit webová rozhraní nebo k čemu se používá nástroj Gitosis. To však nemění nic na tom, že ke spolupráci se skupinou lidí na soukromém projektu *vystačíte* s jedním SSH serverem a holým repozitářem.
 
 ### Nastavení pro malou skupinu ###
 
@@ -283,12 +284,17 @@ Nejprve ze všeho budete muset zapnout zásuvný modul:
 	$ mv hooks/post-update.sample hooks/post-update
 	$ chmod a+x hooks/post-update
 
-Jestliže používáte verzi systému Git starší než 1.6, nebude příkaz `mv` nutný. Git začal pojmenovávat příklady zásuvných modulů příponou „.sample“ teprve nedávno.
-
 Jaká je funkce zásuvného modulu `post-update`? V principu vypadá asi takto:
 
 	$ cat .git/hooks/post-update
 	#!/bin/sh
+	#
+	# An example hook script to prepare a packed repository for use over
+	# dumb transports.
+	#
+	# To enable this hook, rename this file to "post-update".
+	#
+
 	exec git-update-server-info
 
 Znamená to, že až budete odesílat data na server prostřednictvím SSH, Git spustí tento příkaz a aktualizuje soubory vyžadované pro přístup přes HTTP.
@@ -404,7 +410,7 @@ Nyní máte vše hotovo. Pokud jste nastavení provedli správně, můžete vyzk
 
 	$ ssh git@gitserver
 	PTY allocation request failed on channel 0
-	fatal: unrecognized command 'gitosis-serve schacon@quaternion'
+	ERROR:gitosis.serve.main:Need SSH_ORIGINAL_COMMAND in environment.
 	  Connection to gitserver closed.
 
 To znamená, že vás Gitosis sice rozpoznal, ale nedovolí vám přístup, protože se nepokoušíte zadat žádný příkaz Git. Provedeme tedy skutečný příkaz systému Git a naklonujeme řídicí repozitář Gitosis:
@@ -428,28 +434,28 @@ Pokud se podíváte na soubor `gitosis.conf`, měl by udávat pouze informace o 
 	[gitosis]
 
 	[group gitosis-admin]
-	writable = gitosis-admin
 	members = scott
+	writable = gitosis-admin
 
 Tato informace znamená, že uživatel 'scott' – ten, jehož veřejným klíčem jste inicializovali Gitosis – je jediným uživatelem, který má přístup k projektu `gitosis-admin`.
 
 Nyní přidáme nový projekt. Přidáte novou část s názvem `mobile`, která bude obsahovat seznam vývojářů vašeho mobilního týmu a projektů, k nimž tito vývojáři potřebují přístup. Protože je v tuto chvíli jediným uživatelem v systému 'scott', přidáte ho jako jediného člena a vytvoříte pro něj nový projekt s názvem `iphone_project`:
 
 	[group mobile]
-	writable = iphone_project
 	members = scott
+	writable = iphone_project
 
 Pokaždé, když provedete změny v projektu `gitosis-admin`, musíte tyto změny zapsat a odeslat je zpět na server, aby nabyly účinnosti:
 
 	$ git commit -am 'add iphone_project and mobile group'
-	[master]: created 8962da8: "changed name"
-	 1 files changed, 4 insertions(+), 0 deletions(-)
-	$ git push
+	[master 8962da8] add iphone_project and mobile group
+	 1 file changed, 4 insertions(+)
+	$ git push origin master
 	Counting objects: 5, done.
-	Compressing objects: 100% (2/2), done.
-	Writing objects: 100% (3/3), 272 bytes, done.
-	Total 3 (delta 1), reused 0 (delta 0)
-	To git@gitserver:/opt/git/gitosis-admin.git
+	Compressing objects: 100% (3/3), done.
+	Writing objects: 100% (3/3), 272 bytes | 0 bytes/s, done.
+	Total 3 (delta 0), reused 0 (delta 0)
+	To git@gitserver:gitosis-admin.git
 	   fb27aec..8962da8  master -> master
 
 Do nového projektu `iphone_project` teď můžete odeslat svá první data: přidejte do lokální verze projektu svůj server jako vzdálený repozitář a odešlete změny. Od této chvíle už nebudete muset ručně vytvářet holé repozitáře pro nové projekty na serveru. Gitosis je vytvoří automaticky, jakmile zjistí první odeslání dat:
@@ -458,7 +464,7 @@ Do nového projektu `iphone_project` teď můžete odeslat svá první data: př
 	$ git push origin master
 	Initialized empty Git repository in /opt/git/iphone_project.git/
 	Counting objects: 3, done.
-	Writing objects: 100% (3/3), 230 bytes, done.
+	Writing objects: 100% (3/3), 230 bytes | 0 bytes/s, done.
 	Total 3 (delta 0), reused 0 (delta 0)
 	To git@gitserver:iphone_project.git
 	 * [new branch]      master -> master
@@ -474,20 +480,20 @@ Na tomto projektu chcete spolupracovat s přáteli, a proto budete muset znovu p
 Nyní je můžete všechny přidat do týmu 'mobile', čímž získají oprávnění pro čtení i pro zápis k `iphone_project`:
 
 	[group mobile]
-	writable = iphone_project
 	members = scott john josie jessica
+	writable = iphone_project
 
 Až tuto změnu zapíšete a odešlete, všichni čtyři uživatelé budou moci z tohoto projektu číst a zapisovat do něj.
 
 Gitosis nabízí také jednoduchou správu přístupu. Pokud chcete, aby měl John u projektu pouze oprávnění pro čtení, můžete provést následující:
 
 	[group mobile]
-	writable = iphone_project
 	members = scott josie jessica
+	writable = iphone_project
 
 	[group mobile_ro]
-	readonly = iphone_project
 	members = john
+	readonly = iphone_project
 
 John nyní může naklonovat projekt a stahovat jeho aktualizace, ale Gitosis mu neumožní, aby odesílal data zpět do projektu. Takových skupin můžete vytvořit libovolně mnoho. Každá může obsahovat různé uživatele a projekty. Jako jednoho ze členů skupiny můžete zadat také celou jinou skupinu (použijete pro ni předponu `@`). Všichni její členové se tím automaticky zdědí.
 
@@ -495,12 +501,12 @@ John nyní může naklonovat projekt a stahovat jeho aktualizace, ale Gitosis mu
 	members = scott josie jessica
 
 	[group mobile]
-	writable  = iphone_project
 	members   = @mobile_committers
+	writable  = iphone_project
 
 	[group mobile_2]
-	writable  = another_iphone_project
 	members   = @mobile_committers john
+	writable  = another_iphone_project
 
 Máte-li jakékoli problémy, může vám pomoci zadání `loglevel=DEBUG` do části `[gitosis]`. Pokud jste odesláním nesprávné konfigurace ztratili oprávnění k odesílání dat, můžete ručně opravit soubor na serveru v adresáři `/home/git/.gitosis.conf` – jedná se o soubor, z nějž Gitosis načítá data. Po odeslání dat do projektu bude soubor `gitosis.conf`, který jste právě odeslali, umístěn do tohoto adresáře. Pokud soubor ručně upravíte, zůstane v této podobě až do dalšího úspěšného odeslání do projektu `gitosis-admin`.
 
@@ -521,11 +527,11 @@ Instalace Gitolite je velmi jednoduchá a to i když nebudete číst obsáhlou d
 
 Nástroj Gitolite je ve smyslu „serverového“ softwaru poněkud neobvyklý. Přístup se realizuje přes ssh, takže každá serverová userid je potenciálně „hostitelem gitolite“ (gitolite host). Teď si popíšeme nejjednodušší způsob instalace. V dokumentaci naleznete další metody.
 
-Začněte tím, že na serveru vytvoříte uživatele nazvaného `git` a přihlásíte se na něj. Z vaší pracovní stanice nakopírujte svůj veřejný ssh klíč (pokud jste spustili `ssh-keygen` s implicitními hodnotami, jde o soubor `~/.ssh/id_rsa.pub`) a přejmenujte jej na `VaseJmeno.pub`. Potom proveďte následující příkazy:
+Začněte tím, že na serveru vytvoříte uživatele nazvaného `git` a přihlásíte se na něj. Z vaší pracovní stanice nakopírujte svůj veřejný SSH klíč (pokud jste spustili `ssh-keygen` s implicitními hodnotami, jde o soubor `~/.ssh/id_rsa.pub`) a přejmenujte jej na `<vasejmeno>.pub` (v příkladech budeme používat `scott.pub`). Potom proveďte následující příkazy:
 
 	$ git clone git://github.com/sitaramc/gitolite
 	$ gitolite/install -ln
-	    # předpokládá existenci $HOME/bin a uvedení tohoto adresáře v $PATH
+	    # assumes $HOME/bin exists and is in your $PATH
 	$ gitolite setup -pk $HOME/scott.pub
 
 Poslední příkaz vytvoří na serveru nový gitovský repozitář nazvaný `gitolite-admin`.
@@ -560,7 +566,7 @@ Přidávání dalších uživatelů je snadné. Pokud chceme přidat uživatele 
 
 Syntaxe konfiguračního souboru pro Gitolite je dobře dokumentovaná, takže zde uvedu jen pár zajímavých věcí.
 
-Pro usnadnění můžete dávat uživatele i repozitáře do skupin. Jména skupin jsou podobná jako makra; když je definujete, je úplně jedno jestli jde o projekty nebo uživatele; rozdíl to je až v momentu, kdy „makro“ použijete.
+Pro usnadnění můžete dávat uživatele i repozitáře do skupin. Jména skupin jsou podobná jako makra; když je definujete, je úplně jedno jestli jde o projekty nebo uživatele; rozdíl to je až v momentu, kdy „makro“ *použijete*.
 
 	@oss_repos      = linux perl rakudo git gitolite
 	@secret_repos   = fenestra pear
@@ -591,21 +597,21 @@ Toto pravidlo se pak přidá do skupiny pravidel `gitolite` repozitáře.
 
 Teď by vás mohlo zajímat, jak jsou vlastně pravidla pro přístup aplikována, pojďme se na to tedy krátce podívat.
 
-V gitolite jsou dvě úrovně kontroly přístupů. První je úroveň repozitářů; jestliže máte práva na čtení (nebo zápis) k jakékoliv referenci v repozitáři, máte tím práva na čtení (nebo zápis) k tomuto repozitáři. Tohle je jediná možnost jakou měl nástroj Gitosis.
+V gitolite jsou dvě úrovně kontroly přístupů. První je úroveň repozitářů; jestliže máte práva na čtení (nebo zápis) *k jakékoliv* referenci v repozitáři, máte tím práva na čtení (nebo zápis) k tomuto repozitáři. Tohle je jediná možnost jakou měl nástroj Gitosis.
 
 Druhá úroveň je pouze pro práva pro „zápis“ a je podle větve nebo značky v repozitáři. Uživatelské jméno uživatele snažícího se o přístup (`W` nebo `+`) a jméno reference, kterou uživatel chce aktualizovat, jsou dané. Pravidla pro přístup jsou procházena postupně v pořadí, tak jak jsou uvedena v konfiguračním souboru a hledají se záznamy odpovídající této kombinaci uživatelského jména a reference (nezapomeňte ale, že refname se porovnává jako regulární výraz nikoliv jako pouhý řetězec). Jestliže je nalezen odpovídající záznam, odesílání je povoleno. Pokud není nalezeno nic, je přístup zamítnut.
 
-### Rozšířená kontrola přístupu ve větvi „rebel“ ###
+### Rozšířené řízení přístupu pravidly typu „odmítnutí“ ###
 
-Jak můžete vidět výše, práva musí být jedno z nastavení `R`, `RW` nebo `RW+`. Dříve zmíněná větev „rebel“ přidává ještě jedno další právo: `-`, znamenající „odmítnutí“. To dává mnohem více možností za cenu zvýšení složitosti, protože nyní už není nenalezení odpovídajícího záznamu při procházení pravidel jedinou možností, jak může být přístup zamítnut. Takže nyní už na pořadí pravidel záleží!
+Prozatím jsme si ukázali jen oprávnění nastavená na jednu z hodnot `R`, `RW` nebo `RW+`. Ale Gitolite dovoluje nastavení dalšího oprávnění: `-` s významem „odmítnutí“. To vám dává mnohem více možností, ale za cenu zvýšení složitosti. Popadnutí sítem pravidel už totiž není *jedinou* možností vedoucí k zamítnutí přístupu. *Nyní už záleží na pořadí pravidel!*
 
-Řekněme, že ve výše uvedené situaci budeme chtít, aby skupina engineers mohla vracet změny v jakékoliv větvi s výjimkou větvě „hlavní“ a větve „integ“. To se nedá nastavit pomocí normální syntaxe, ale s pomocí větve „rebel“ podle následujícího postupu:
+Řekněme, že ve výše uvedené situaci budeme chtít, aby skupina engineers mohla vracet změny v jakékoliv větvi *s výjimkou* větví `master` a `integ`. Udělá se to následovně:
 
 	    RW  master integ    = @engineers
 	    -   master integ    = @engineers
 	    RW+                 = @engineers
 
-Pravidla se znovu budou procházet postupně až do momentu, kdy bude nalezeno odpovídají pravidlo nebo bude přístup zamítnut. Odeslání do hlavní větve nebo větve „integ“, která nevracejí zpět změny, jsou povolena prvním pravidlem. Odeslání, která vracejí změny do těchto větví, neodpovídají prvnímu pravidlu. Porovnají se tedy s druhým pravidlem a na jeho základě budou zamítnuty. Odeslání (bez ohledu na to zda se jedná o vracení změn nebo ne) do jiných referencí než hlavní a „integ“ nebudou odpovídat ani prvnímu ani druhému pravidlu a budou tedy díky třetímu pravidlu povolena.
+Pravidla se  budou opět procházet shora dolů až do momentu, kdy narazíte na shodu s vaším režimem přístupu nebo na pravidlo typu odmítnutí (deny). Odeslání do větve `master` nebo `integ`, která nevracejí zpět změny (non-rewind push), jsou povolena prvním pravidlem. Odeslání, která vracejí změny (rewind push) do těchto větví, neodpovídají prvnímu pravidlu. Porovnají se tedy s druhým pravidlem a na jeho základě budou zamítnuty. Jakékoliv odeslání (bez ohledu na to zda se jedná o vracení změn nebo ne) do jiných referencí než `master` nebo `integ` nebudou odpovídat ani prvnímu ani druhému pravidlu, a proto bude díky třetímu pravidlu povoleno.
 
 ### Omezení odesílání změn vázané na soubory ###
 
