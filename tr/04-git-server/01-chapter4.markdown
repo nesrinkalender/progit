@@ -1,4 +1,4 @@
-# Git on the Server #
+# Serverda Git #
 
 At this point, you should be able to do most of the day-to-day tasks for which you’ll be using Git. However, in order to do any collaboration in Git, you’ll need to have a remote Git repository. Although you can technically push changes to and pull changes from individuals’ repositories, doing so is discouraged because you can fairly easily confuse what they’re working on if you’re not careful. Furthermore, you want your collaborators to be able to access the repository even if your computer is offline — having a more reliable common repository is often useful. Therefore, the preferred method for collaborating with someone is to set up an intermediate repository that you both have access to, and push to and pull from that. We’ll refer to this repository as a "Git server"; but you’ll notice that it generally takes a tiny amount of resources to host a Git repository, so you’ll rarely need to use an entire server for it.
 
@@ -8,13 +8,13 @@ If you have no interest in running your own server, you can skip to the last sec
 
 A remote repository is generally a _bare repository_ — a Git repository that has no working directory. Because the repository is only used as a collaboration point, there is no reason to have a snapshot checked out on disk; it’s just the Git data. In the simplest terms, a bare repository is the contents of your project’s `.git` directory and nothing else.
 
-## The Protocols ##
+## Protokoller ##
 
-Git can use four major network protocols to transfer data: Local, Secure Shell (SSH), Git, and HTTP. Here we’ll discuss what they are and in what basic circumstances you would want (or not want) to use them.
+Git data transferi için başlıca dört adet ağ protokolü kullanır: Local, Secure Shell (SSH), Git and HTTP. Burada bu protokoller nedir ve temel koşullarda hangisini kullanmalıyız ya da kullanmamalıyoz tartışacağız.
 
-It’s important to note that with the exception of the HTTP protocols, all of these require Git to be installed and working on the server.
+Burada önemli olarak HTTP protokolünü ayrı tutacağız, çünkü Git kurulan bütün serverlerda HTTP protokolü bulunması gerekir.
 
-### Local Protocol ###
+### Lokal Protokoller ###
 
 The most basic is the _Local protocol_, in which the remote repository is in another directory on disk. This is often used if everyone on your team has access to a shared filesystem such as an NFS mount, or in the less likely case that everyone logs in to the same computer. The latter wouldn’t be ideal, because all your code repository instances would reside on the same computer, making a catastrophic loss much more likely.
 
@@ -166,10 +166,9 @@ A second method is to create a single 'git' user on the machine, ask every user 
 
 Another way to do it is to have your SSH server authenticate from an LDAP server or some other centralized authentication source that you may already have set up. As long as each user can get shell access on the machine, any SSH authentication mechanism you can think of should work.
 
-## Generating Your SSH Public Key ##
+## SSH Key Oluşturmak ##
 
-That being said, many Git servers authenticate using SSH public keys. In order to provide a public key, each user in your system must generate one if they don’t already have one. This process is similar across all operating systems.
-First, you should check to make sure you don’t already have a key. By default, a user’s SSH keys are stored in that user’s `~/.ssh` directory. You can easily check to see if you have a key already by going to that directory and listing the contents:
+Git serverlerda kimlik doğrulaması için SSH public keys kullanıyor. Eğer oluşturulmuş yoksa her kullanıcı için sistem bir key oluşturur.Bütün sistemlerdeki gibi. İlk olarak hazırda bir key var mı kontrol edilir. Varsayılan olarak, bir kullanıcının SSH anahtarları o kullanıcının ~ /. ssh dizininde depolanır. Eğer oluşturulmuş bir key varsa onu kolayca listeleyebilirsiniz.
 
 	$ cd ~/.ssh
 	$ ls
@@ -200,7 +199,7 @@ Now, each user that does this has to send their public key to you or whoever is 
 	mZ+AW4OZPnTPI89ZPmVMLuayrD2cE86Z/il8b+gw3r3+1nKatmIkjn2so1d01QraTlMqVSsbx
 	NrRFi9wrf+M7Q== schacon@agadorlaptop.local
 
-For a more in-depth tutorial on creating an SSH key on multiple operating systems, see the GitHub guide on SSH keys at `http://github.com/guides/providing-your-ssh-key`.
+Birden fazla işletim sistemlerinde SSH key oluşturma ile ilgili kapsamlı bilgi için bknz: Github klavuzu SSH keys http://github.com/guides/providing-your-ssh-key.
 
 ## Setting Up the Server ##
 
