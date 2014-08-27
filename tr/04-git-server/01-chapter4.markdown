@@ -16,9 +16,9 @@ Burada önemli olarak HTTP protokolünü ayrı tutacağız, çünkü Git kurulan
 
 ### Lokal Protokoller ###
 
-En temel olanı, uzak reponun diskimizdeki başka bir klasör olduğu lokal protokoldür. This is often used if everyone on your team has access to a shared filesystem such as an NFS mount, or in the less likely case that everyone logs in to the same computer. The latter wouldn’t be ideal, because all your code repository instances would reside on the same computer, making a catastrophic loss much more likely.
+En temel olanı, uzak reponun diskimizdeki başka bir klasör olduğu lokal protokoldür. Bu genellikle ekibinizdeki herkes NFS mount vb. şeklinde paylaşılan dosyalara erişiyorsa veya az kullanılan bir yöntem olarak; işler herkesin kullanıcı girişi yaptığı bir bilgisayar üzerinde yürütülüyorsa kullanılır. İkincisi ideal olmaz, çünkü tüm repoların aynı bilgisayarda bulunması bir kayıpta felaket olurdu.
 
-If you have a shared mounted filesystem, then you can clone, push to, and pull from a local file-based repository. To clone a repository like this or to add one as a remote to an existing project, use the path to the repository as the URL. For example, to clone a local repository, you can run something like this:
+Eğer paylaşılan bir dosya sisteminiz varsa, local file-based reponuzdan clone,push ve pull işlemlerini yapabilirsiniz. Bunları yapmak için URL olarak reponuzun klasör yolunu kullanmalısınız. Örneğin, lokal repo kolanlayım, böyle bir komut çalıştırabilirsinz.
 
 	$ git clone /opt/git/project.git
 
@@ -26,7 +26,7 @@ Or you can do this:
 
 	$ git clone file:///opt/git/project.git
 
-Git operates slightly differently if you explicitly specify `file://` at the beginning of the URL. If you just specify the path, and the source and the destination are on the same filesystem, Git tries to hardlink the objects it needs. If they are not on the same filesystem, it will copy the objects it needs using the system's standard copying functionality. If you specify `file://`, Git fires up the processes that it normally uses to transfer data over a network which is generally a lot less efficient method of transferring the data. The main reason to specify the `file://` prefix is if you want a clean copy of the repository with extraneous references or objects left out — generally after an import from another version-control system or something similar (see Chapter 9 for maintenance tasks). We’ll use the normal path here because doing so is almost always faster.
+Eğer URL'inizin başında açıkça `file://` belirtirseniz, Git biraz farklı çalışır. Sadece yolu belirtirseniz; ve kaynak ile hedef aynı dosya sisteminde ise, Git ihtiyacı olan objeleri hardlink ile bağlamaya çalışır. Eğer aynı dosya sisteminde değillerse; gerekli ihtiyacı olan dosyaları üzerinde bulunduğu sistemin standart kopyalama fonksiyonalitesini kullanarak kopyalayacaktır. Eger `file://`ı belirtirseniz; Git normalde dosyaları transfer etmek için kullandığı ve daha verimsiz olan ağ üzerinden transfer yöntemini kullanmaz. `file://`ı belirtmenin ana sebebi genellikle başka bir versiyon kontrol sisteminden içe aktarma gibi işlemler yapıldıktan sonra (bakım işlemleri ile ilgili 9. bölümü inceleyin) yabancı referanslar ve kalıntı objeler içeren reponuzun temiz bir kopyasını almaktır. Biz daha hızlı olduğu için burada normal yolu kullanacağız.
 
 To add a local repository to an existing Git project, you can run something like this:
 
