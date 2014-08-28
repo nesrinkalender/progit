@@ -22,7 +22,7 @@ Eğer paylaşılan bir dosya sisteminiz varsa, local file-based reponuzdan clone
 
 	$ git clone /opt/git/project.git
 
-Or you can do this:
+Ya da:
 
 	$ git clone file:///opt/git/project.git
 
@@ -44,7 +44,7 @@ Bu aynı zamanda başkasının reposundan çalışmasını hızlıca almak için
 
 Bu yöntemin eksileri genellikle paylaşılan erişimi kurmak ve bir çok yerden erişmek temel ağ erişiminden daha zordur. Eğer evinizdeki bilgisiyarınızdan uzak diskinize push etmek istiyorsanız ağ tabanlı erişim zor ve yavaş olabilir.
 
-Eğer siz paylaşılan bir disk kullanıyorsanız  A local repository is fast only if you have fast access to the data. A repository on NFS is often slower than the repository over SSH on the same server, allowing Git to run off local disks on each system.
+Eğer siz paylaşılan bir disk kullanıyorsanız hızlı olmasından söz edemeyiz. Eğer verilere hızlı erişiminiz varsa lokal reponuz hızlıdır. A repository on NFS is often slower than the repository over SSH on the same server, allowing Git to run off local disks on each system.
 
 ### SSH Protokolü ###
 
