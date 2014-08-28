@@ -28,25 +28,25 @@ Or you can do this:
 
 Eğer URL'inizin başında açıkça `file://` belirtirseniz, Git biraz farklı çalışır. Sadece yolu belirtirseniz; ve kaynak ile hedef aynı dosya sisteminde ise, Git ihtiyacı olan objeleri hardlink ile bağlamaya çalışır. Eğer aynı dosya sisteminde değillerse; gerekli ihtiyacı olan dosyaları üzerinde bulunduğu sistemin standart kopyalama fonksiyonalitesini kullanarak kopyalayacaktır. Eger `file://`ı belirtirseniz; Git normalde dosyaları transfer etmek için kullandığı ve daha verimsiz olan ağ üzerinden transfer yöntemini kullanmaz. `file://`ı belirtmenin ana sebebi genellikle başka bir versiyon kontrol sisteminden içe aktarma gibi işlemler yapıldıktan sonra (bakım işlemleri ile ilgili 9. bölümü inceleyin) yabancı referanslar ve kalıntı objeler içeren reponuzun temiz bir kopyasını almaktır. Biz daha hızlı olduğu için burada normal yolu kullanacağız.
 
-To add a local repository to an existing Git project, you can run something like this:
+Varolan bir Git projesine lokal repo eklemek için aşağıdaki gibi bir kod çalıştırmalısınız;
 
 	$ git remote add local_proj /opt/git/project.git
 
-Then, you can push to and pull from that remote as though you were doing so over a network.
+Sonra, bir network üzerinden yapıyormuşsunuz gibi o remote üzerinde pull ve push yapabilirsiz.
 
-#### The Pros ####
+#### Artıları ####
 
-The pros of file-based repositories are that they’re simple and they use existing file permissions and network access. If you already have a shared filesystem to which your whole team has access, setting up a repository is very easy. You stick the bare repository copy somewhere everyone has shared access to and set the read/write permissions as you would for any other shared directory. We’ll discuss how to export a bare repository copy for this purpose in the next section, “Getting Git on a Server.”
+File-based depoların artıları basit olmaları ve mevcut dosya izinlerini ve ağ erişimini kullanabilir olmasıdır. Eğer paylaşılan bir dosya sisteminiz varsa, ekibiniz için bir repo kurmak çok kolay bir işlemdir. You stick the bare repository copy somewhere everyone has shared access to and set the read/write permissions as you would for any other shared directory. We’ll discuss how to export a bare repository copy for this purpose in the next section, “Getting Git on a Server.”
 
-This is also a nice option for quickly grabbing work from someone else’s working repository. If you and a co-worker are working on the same project and they want you to check something out, running a command like `git pull /home/john/project` is often easier than them pushing to a remote server and you pulling down.
+Bu aynı zamanda başkasının reposundan çalışmasını hızlıca almak için güzel bir seçenek. Eğer siz ve meslektaşınız aynı projede çalışıyorsanız onlar sizin yaptıklarınızı kontrol etmek isteyeceklerdir, bunun için `git pull /home/john/project` gibi bir komut çalıştırmak genellikle servera push etmek ve pull etmekten daha kolaydır.
 
-#### The Cons ####
+#### Eksileri ####
 
-The cons of this method are that shared access is generally more difficult to set up and reach from multiple locations than basic network access. If you want to push from your laptop when you’re at home, you have to mount the remote disk, which can be difficult and slow compared to network-based access.
+Bu yöntemin eksileri genellikle paylaşılan erişimi kurmak ve bir çok yerden erişmek temel ağ erişiminden daha zordur. Eğer evinizdeki bilgisiyarınızdan uzak diskinize push etmek istiyorsanız ağ tabanlı erişim zor ve yavaş olabilir.
 
-It’s also important to mention that this isn’t necessarily the fastest option if you’re using a shared mount of some kind. A local repository is fast only if you have fast access to the data. A repository on NFS is often slower than the repository over SSH on the same server, allowing Git to run off local disks on each system.
+Eğer siz paylaşılan bir disk kullanıyorsanız  A local repository is fast only if you have fast access to the data. A repository on NFS is often slower than the repository over SSH on the same server, allowing Git to run off local disks on each system.
 
-### The SSH Protocol ###
+### SSH Protokolü ###
 
 Probably the most common transport protocol for Git is SSH. This is because SSH access to servers is already set up in most places — and if it isn’t, it’s easy to do. SSH is also the only network-based protocol that you can easily read from and write to. The other two network protocols (HTTP and Git) are generally read-only, so even if you have them available for the unwashed masses, you still need SSH for your own write commands. SSH is also an authenticated network protocol; and because it’s ubiquitous, it’s generally easy to set up and use.
 
@@ -60,28 +60,28 @@ Or you can use the shorter scp-like syntax for SSH protocol:
 
 You can also not specify a user, and Git assumes the user you’re currently logged in as.
 
-#### The Pros ####
+#### Artıları ####
 
 The pros of using SSH are many. First, you basically have to use it if you want authenticated write access to your repository over a network. Second, SSH is relatively easy to set up — SSH daemons are commonplace, many network admins have experience with them, and many OS distributions are set up with them or have tools to manage them. Next, access over SSH is secure — all data transfer is encrypted and authenticated. Last, like the Git and Local protocols, SSH is efficient, making the data as compact as possible before transferring it.
 
-#### The Cons ####
+#### Eksileri ####
 
 The negative aspect of SSH is that you can’t serve anonymous access of your repository over it. People must have access to your machine over SSH to access it, even in a read-only capacity, which doesn’t make SSH access conducive to open source projects. If you’re using it only within your corporate network, SSH may be the only protocol you need to deal with. If you want to allow anonymous read-only access to your projects, you’ll have to set up SSH for you to push over but something else for others to pull over.
 
-### The Git Protocol ###
+### Git Protokolü ###
 
 Next is the Git protocol. This is a special daemon that comes packaged with Git; it listens on a dedicated port (9418) that provides a service similar to the SSH protocol, but with absolutely no authentication. In order for a repository to be served over the Git protocol, you must create the `git-daemon-export-ok` file — the daemon won’t serve a repository without that file in it — but other than that there is no security. Either the Git repository is available for everyone to clone or it isn’t. This means that there is generally no pushing over this protocol. You can enable push access; but given the lack of authentication, if you turn on push access, anyone on the internet who finds your project’s URL could push to your project. Suffice it to say that this is rare.
 
-#### The Pros ####
+#### Artıları ####
 
 The Git protocol is the fastest transfer protocol available. If you’re serving a lot of traffic for a public project or serving a very large project that doesn’t require user authentication for read access, it’s likely that you’ll want to set up a Git daemon to serve your project. It uses the same data-transfer mechanism as the SSH protocol but without the encryption and authentication overhead.
 
-#### The Cons ####
+#### Eksileri ####
 
 The downside of the Git protocol is the lack of authentication. It’s generally undesirable for the Git protocol to be the only access to your project. Generally, you’ll pair it with SSH access for the few developers who have push (write) access and have everyone else use `git://` for read-only access.
 It’s also probably the most difficult protocol to set up. It must run its own daemon, which is custom — we’ll look at setting one up in the “Gitosis” section of this chapter — it requires `xinetd` configuration or the like, which isn’t always a walk in the park. It also requires firewall access to port 9418, which isn’t a standard port that corporate firewalls always allow. Behind big corporate firewalls, this obscure port is commonly blocked.
 
-### The HTTP/S Protocol ###
+### HTTP / S Protokolü ###
 
 Last we have the HTTP protocol. The beauty of the HTTP or HTTPS protocol is the simplicity of setting it up. Basically, all you have to do is put the bare Git repository under your HTTP document root and set up a specific `post-update` hook, and you’re done (See Chapter 7 for details on Git hooks). At that point, anyone who can access the web server under which you put the repository can also clone your repository. To allow read access to your repository over HTTP, do something like this:
 
@@ -99,7 +99,7 @@ In this particular case, we’re using the `/var/www/htdocs` path that is common
 
 It’s possible to make Git push over HTTP as well, although that technique isn’t as widely used and requires you to set up complex WebDAV requirements. Because it’s rarely used, we won’t cover it in this book. If you’re interested in using the HTTP-push protocols, you can read about preparing a repository for this purpose at `http://www.kernel.org/pub/software/scm/git/docs/howto/setup-git-server-over-http.txt`. One nice thing about making Git push over HTTP is that you can use any WebDAV server, without specific Git features; so, you can use this functionality if your web-hosting provider supports WebDAV for writing updates to your web site.
 
-#### The Pros ####
+#### Artıları ####
 
 The upside of using the HTTP protocol is that it’s easy to set up. Running the handful of required commands gives you a simple way to give the world read access to your Git repository. It takes only a few minutes to do. The HTTP protocol also isn’t very resource intensive on your server. Because it generally uses a static HTTP server to serve all the data, a normal Apache server can serve thousands of files per second on average — it’s difficult to overload even a small server.
 
@@ -107,7 +107,7 @@ You can also serve your repositories read-only over HTTPS, which means you can e
 
 Another nice thing is that HTTP is such a commonly used protocol that corporate firewalls are often set up to allow traffic through this port.
 
-#### The Cons ####
+#### Eksileri ####
 
 The downside of serving your repository over HTTP is that it’s relatively inefficient for the client. It generally takes a lot longer to clone or fetch from the repository, and you often have a lot more network overhead and transfer volume over HTTP than with any of the other network protocols. Because it’s not as intelligent about transferring only the data you need — there is no dynamic work on the part of the server in these transactions — the HTTP protocol is often referred to as a _dumb_ protocol. For more information about the differences in efficiency between the HTTP protocol and the other protocols, see Chapter 9.
 
@@ -837,7 +837,7 @@ Figure 4-13. A GitHub main project page.
 
 When people visit your project, they see this page. It contains tabs to different aspects of your projects. The Commits tab shows a list of commits in reverse chronological order, similar to the output of the `git log` command. The Network tab shows all the people who have forked your project and contributed back. The Downloads tab allows you to upload project binaries and link to tarballs and zipped versions of any tagged points in your project. The Wiki tab provides a wiki where you can write documentation or other information about your project. The Graphs tab has some contribution visualizations and statistics about your project. The main Source tab that you land on shows your project’s main directory listing and automatically renders the README file below it if you have one. This tab also shows a box with the latest commit information.
 
-### Forking Projects ###
+### Projeleri Forklamak ###
 
 If you want to contribute to an existing project to which you don’t have push access, GitHub encourages forking the project. When you land on a project page that looks interesting and you want to hack on it a bit, you can click the "fork" button in the project header to have GitHub copy that project to your user so you can push to it.
 
@@ -853,11 +853,11 @@ After a few seconds, you’re taken to your new project page, which indicates th
 Insert 18333fig0415.png
 Figure 4-15. Your fork of a project.
 
-### GitHub Summary ###
+### GitHub Özeti ###
 
 That’s all we’ll cover about GitHub, but it’s important to note how quickly you can do all this. You can create an account, add a new project, and push to it in a matter of minutes. If your project is open source, you also get a huge community of developers who now have visibility into your project and may well fork it and help contribute to it. At the very least, this may be a way to get up and running with Git and try it out quickly.
 
-## Summary ##
+## Özet ##
 
 You have several options to get a remote Git repository up and running so that you can collaborate with others or share your work.
 
