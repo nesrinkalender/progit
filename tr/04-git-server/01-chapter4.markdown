@@ -48,21 +48,22 @@ Eğer siz paylaşılan bir disk kullanıyorsanız hızlı olmasından söz edeme
 
 ### SSH Protokolü ###
 
-Probably the most common transport protocol for Git is SSH. This is because SSH access to servers is already set up in most places — and if it isn’t, it’s easy to do. SSH is also the only network-based protocol that you can easily read from and write to. The other two network protocols (HTTP and Git) are generally read-only, so even if you have them available for the unwashed masses, you still need SSH for your own write commands. SSH is also an authenticated network protocol; and because it’s ubiquitous, it’s generally easy to set up and use.
+Git için en yaygın transfer protokolü SSH'dır. Çünkü SSH erişimi zaten bir çok yerde kuruludur, eğer kurulu değilse de kurulumu gayet kolaydır. SSH yalnızca ağ tabanlı bir protokoldür  kolayca okuyabilir ve yazabilirsiniz. The other two network protocols (HTTP and Git) are generally read-only, so even if you have them available for the unwashed masses, you still need SSH for your own write commands. SSH doğrulanmış bir ağ protokolüdür. Çünkü her yerde bulunur ayrıca kurulumu ve kullanımı kolaydır.
 
-To clone a Git repository over SSH, you can specify ssh:// URL like this:
+Git reposunu SSH üzerinden clonelarken, URL'i ssh:// şeklinde belirtmelisiniz. Örnek:
 
 	$ git clone ssh://user@server/project.git
 
-Or you can use the shorter scp-like syntax for SSH protocol:
+Ya da SSH için kısaca scp-like yazımını kullanabilirsiniz :
 
 	$ git clone user@server:project.git
 
 You can also not specify a user, and Git assumes the user you’re currently logged in as.
+Siz bir kullanıcı belirlemezseniz, Git geçerli oturum açmış olan kullanıcıyı varsayar.
 
 #### Artıları ####
 
-The pros of using SSH are many. First, you basically have to use it if you want authenticated write access to your repository over a network. Second, SSH is relatively easy to set up — SSH daemons are commonplace, many network admins have experience with them, and many OS distributions are set up with them or have tools to manage them. Next, access over SSH is secure — all data transfer is encrypted and authenticated. Last, like the Git and Local protocols, SSH is efficient, making the data as compact as possible before transferring it.
+SSH kullanmanızın çok fazla artıları vardır. İlk olarak, temelde kullandığınız bir ağ üzerinden doğrulanmış bir kimlik ile dosyalara yazma erişiminiz olur. Second, SSH is relatively easy to set up — SSH daemons are commonplace, many network admins have experience with them, and many OS distributions are set up with them or have tools to manage them. Next, access over SSH is secure — all data transfer is encrypted and authenticated. Last, like the Git and Local protocols, SSH is efficient, making the data as compact as possible before transferring it.
 
 #### Eksileri ####
 
