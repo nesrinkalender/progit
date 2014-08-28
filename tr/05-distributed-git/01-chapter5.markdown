@@ -36,41 +36,41 @@ Figure 5-2. Entegrasyon Yöneticili Çalışma Akışı
 
 Bir projeyi fork etmek ve o fork üzerinde çalışmak gibi işlemlerin kolay olduğu, Github gibi sitelerle birlikte bu çok kullanılan bir çalışma akışıdır. Bu yaklaşımın ana kazanımlarından biri geliştirici çalışmaya devam ederken yönetici geliştiricinin değişikliklerini herhangi bir zamanda ana repoya alabilir. Katılımcılar projenin kendi değişikliklerini dahil etmesini beklemek zorunda değildir. Herkes kendi alanında çalışabilir.
 
-### Dictator and Lieutenants Workflow ###
+### Diktatör ve Yüzbaşılar Çalışma Akışı (Dictator and Lieutenants Workflow) ###
 
-This is a variant of a multiple-repository workflow. It’s generally used by huge projects with hundreds of collaborators; one famous example is the Linux kernel. Various integration managers are in charge of certain parts of the repository; they’re called lieutenants. All the lieutenants have one integration manager known as the benevolent dictator. The benevolent dictator’s repository serves as the reference repository from which all the collaborators need to pull. The process works like this (see Figure 5-3):
+Bu çoklu repo çalışma akışının bir varyasyonudur. Genellikle yüzlerce katılımcının olduğu devasa projelerde kullanılır; meşhur bir örnek Linux çekirdeğidir. Bir çok entegrasyon yöneticisi projenin çeşitli yerlerinden sorumludur; bu kişiler yüzbaşılardır. Tüm yüzbaşıların üstünde ise 'iyiliksever diktatör' denilen tek bir entegrasyon yöneticisi vardır. İyiliksever diktatörün reposu tüm katılımcıların pull etmesi gereken referans repo konumundadır. Bu işlem aşağıdaki şu şekilde ilerler (Resim 5-3):
 
-1. Regular developers work on their topic branch and rebase their work on top of master. The master branch is that of the dictator.
-2. Lieutenants merge the developers’ topic branches into their master branch.
-3. The dictator merges the lieutenants’ master branches into the dictator’s master branch.
-4. The dictator pushes their master to the reference repository so the other developers can rebase on it.
+1. Normal geliştiriciler kendi topic branch(konu dalı)lerinde çalışırlan ve değişikliklerini diktatörün master branchi üzerinde rebase ederler.
+2. Yüzbaşılar geliştiricilerin branchlerini kendi master branchlerine birleştirirler.
+3. Diktatör yüzbaşıların master branchini kendi master branchine birleştirir.
+4. Diktatör kendi master branchini referans repoya gönderir. Böylece diğer developerlar bunun üzerine rebase edebilirler.
 
 Insert 18333fig0503.png
-Figure 5-3. Benevolent dictator workflow.
+Resim 5-3. Diktatör ve Yüzbaşılar Çalışma Akışı.
 
-This kind of workflow isn’t common but can be useful in very big projects or in highly hierarchical environments, as it allows the project leader (the dictator) to delegate much of the work and collect large subsets of code at multiple points before integrating them.
+Bu tarz bir çalışma akışı çok yaygın değildir fakat büyük projelerde veya çok hiyerarşik ortamlarda kullanışlı olabilir. Çünkü bu akış proje liderine (diktatör) görevlerin çoğunu dağıtma ve büyük kod setlerini entegre etmeden önce toplama imkanı sunar.
 
-These are some commonly used workflows that are possible with a distributed system like Git, but you can see that many variations are possible to suit your particular real-world workflow. Now that you can (I hope) determine which workflow combination may work for you, I’ll cover some more specific examples of how to accomplish the main roles that make up the different flows.
+Bunlar Git gibi dağıtık sistemlerde mümkün olan çalışma akışlarından çok yaygın olan birkaçıydı. Sizin takım yapınıza ve çalışma şeklinize uygun olan daha başka yöntemler bulunabilir. Artık (umarım) hangi çalışma akışı kombinasyonunun size uyacağına karar verebilirsiniz. Şimdi daha özele inen bazı örneklerle değişik senaryolarda mümkün olabilecek rollerin çalışma akışlarından bahsedelim.
 
-## Contributing to a Project ##
+## Bir Projeye Katılım Sağlamak ##
 
-You know what the different workflows are, and you should have a pretty good grasp of fundamental Git usage. In this section, you’ll learn about a few common patterns for contributing to a project.
+Artık değişik çalışma akışlarını biliyor ve temel Git kullanımını iyice kavramış olmanız gerekiyor. Bu bölümde, bir projeye katkı sağlarken kullanılabilecek bazı genel pattern(desen)lardan bahsedeceğiz.
 
-The main difficulty with describing this process is that there are a huge number of variations on how it’s done. Because Git is very flexible, people can and do work together many ways, and it’s problematic to describe how you should contribute to a project — every project is a bit different. Some of the variables involved are active contributor size, chosen workflow, your commit access, and possibly the external contribution method.
+Bu işlemi açıklamanın en zor tarafı, nasıl yapılacağı ile ilgili çok fazla sayıda varyasyon olmasıdır. Çünkü Git çok esnektir ve insanlar bir arada çok farklı şekillerde çalışabilirler ve her proje birbirinden farklıdır. Bu da bir projeye nasıl katılım sağlanacağı konusunu anlatmayı problemli bir hale getirmektedir. İlişkili bazı değişkenler; aktif katılımcı sayısı, seçilen çalışma akışı, commit erişiminiz ve belki dışarıdan katılım metodudur.
 
-The first variable is active contributor size. How many users are actively contributing code to this project, and how often? In many instances, you’ll have two or three developers with a few commits a day, or possibly less for somewhat dormant projects. For really large companies or projects, the number of developers could be in the thousands, with dozens or even hundreds of patches coming in each day. This is important because with more and more developers, you run into more issues with making sure your code applies cleanly or can be easily merged. Changes you submit may be rendered obsolete or severely broken by work that is merged in while you were working or while your changes were waiting to be approved or applied. How can you keep your code consistently up to date and your patches valid?
+İlk değişken; aktif katılımcı sayısı. Kaç kişi bu projeye ne sıklıkla kod katılımı sağlıyorlar? Birçok durumda iki-üç geliştiriciniz ve her geliştirici için günde birkaç commit olacaktır; atıl projeler için belki daha az. Fakat gerçekten büyük şirketler ve projeler için, binlerce geliştirici ve her gün düzinelerce hatta yüzlerce yama olabilir. Bu önemlidir çünkü geliştici sayısı arttıkça, kodunuzun temizce uygulanması ve kolayca birleştirilmesi konusunda daha çok sıkıntı yaşayacaksınız. Değişiklikleriniz, siz çalışırken veya değişikliklerinizin birleştirilmesini beklerken başka geliştiricilerin değişikliklerinin birleştirilmiş olmasından dolayı eski kalmış ya da kısmen/tamamen bozulmaya sebep olmuş olabilir. Peki kodunuzu nasıl düzenli olarak güncel ve değişikliklerinizi güncel tutacaksınız?
 
-The next variable is the workflow in use for the project. Is it centralized, with each developer having equal write access to the main codeline? Does the project have a maintainer or integration manager who checks all the patches? Are all the patches peer-reviewed and approved? Are you involved in that process? Is a lieutenant system in place, and do you have to submit your work to them first?
+Diğer değişken; projeniz için kullandığınız çalışma akışı. Her geliştiricinin kod üzerinde eşit yazma hakları olacak şekilde merkezi mi? Projede tüm yamaları kontrol eden bir entegrasyon yöneticisi var mı? Tüm yamalar başka geliştiriciler kontrol edilip mi onaylanıyor? Siz bu süreçte var mısınız? Bir yüzbaşı sistemi var ve öncelikle değişikliklerinizi onlara mı göndermek durumundasınız?
 
-The next issue is your commit access. The workflow required in order to contribute to a project is much different if you have write access to the project than if you don’t. If you don’t have write access, how does the project prefer to accept contributed work? Does it even have a policy? How much work are you contributing at a time? How often do you contribute?
+Diğer bir sorun ise commit erişiminiz. Çünkü bir projeye doğrudan yazma izninizin olup olmaması o projede uygulanması gereken çalışma akışını çok etkiler. Eğer yazma izniniz yoksa, prje katılımcıların çalışmalarını ne şekilde kabul etmeyi tercih ediyor? Bir politikasi var mı? Tek seferde ne kadarlık bir katılım sağlıyorsunuz? Ne sıklıkla katılım sağlıyorsunuz?
 
-All these questions can affect how you contribute effectively to a project and what workflows are preferred or available to you. I’ll cover aspects of each of these in a series of use cases, moving from simple to more complex; you should be able to construct the specific workflows you need in practice from these examples.
+Tüm bu sorular nasıl verimli bir şekilde katılım sağlayacağınızı, sizin için ne şekilde çalışma akışları mevcut olacağını ve tercih edildiğini etkileyecektir. Bunların her birini ve yönlerini, basitten karmaşığa doğru giderek ve bir seri kullanım durumları halinde inceleyeceğiz. Sonrasında ihtiyaç duyduğunuz çalışma akışını bu örneklerden yola çıkarak oluşturabilirsiniz.
 
-### Commit Guidelines ###
+### Commit Prensipleri ###
 
-Before you start looking at the specific use cases, here’s a quick note about commit messages. Having a good guideline for creating commits and sticking to it makes working with Git and collaborating with others a lot easier. The Git project provides a document that lays out a number of good tips for creating commits from which to submit patches — you can read it in the Git source code in the `Documentation/SubmittingPatches` file.
+Özel kullanım durumlarına bakmadan önce, commit mesajları hakkında küçük bir not düşelim. Commit oluşturmak ile ilgili iyi prensiplere sahip olmak ve bunlara uymayı sürdürmek Git ile çalışmayı ve diğer geliştiricilerle yapılan işbirliğini çok kolaylaştırır. Git projesinin kendisine gönderilen yamalar iyi commitler oluşturmak için bize birçok ipucu sunmaktadır. Aynı zamanda Git kaynak kodunda `Documentation/SubmittingPatches` dosyasını okuyabilirsiniz.
 
-First, you don’t want to submit any whitespace errors. Git provides an easy way to check for this — before you commit, run `git diff --check`, which identifies possible whitespace errors and lists them for you. Here is an example, where I’ve replaced a red terminal color with `X`s:
+Öncelikle, hiç bir beyaz-boşluk hatasını göndermek istemezsiniz. Git bunun kontrolü için kolay bir yol sunmaktadır. Commit etmeden önce `git diff --check` çalıştırırsanız, Git olası beyaz-boşluk hatalarını bulacak ve sizin için listeleyecektir. Bir örnek: (terminaldeki kırmızı renkler `X` ile değiştirilmiştir)
 
 	$ git diff --check
 	lib/simplegit.rb:5: trailing whitespace.
@@ -80,140 +80,139 @@ First, you don’t want to submit any whitespace errors. Git provides an easy wa
 	lib/simplegit.rb:26: trailing whitespace.
 	+    def command(git_cmd)XXXX
 
-If you run that command before committing, you can tell if you’re about to commit whitespace issues that may annoy other developers.
+Eğer commit etmeden önce bu komutu çalıştırırsanız, neredeyse muhtemelen diğer geliştiricileri rahatsız edecek olan beyaz-boşlukları commit ediyor olduğunuzu görürsünüz.
 
-Next, try to make each commit a logically separate changeset. If you can, try to make your changes digestible — don’t code for a whole weekend on five different issues and then submit them all as one massive commit on Monday. Even if you don’t commit during the weekend, use the staging area on Monday to split your work into at least one commit per issue, with a useful message per commit. If some of the changes modify the same file, try to use `git add --patch` to partially stage files (covered in detail in Chapter 6). The project snapshot at the tip of the branch is identical whether you do one commit or five, as long as all the changes are added at some point, so try to make things easier on your fellow developers when they have to review your changes. This approach also makes it easier to pull out or revert one of the changesets if you need to later. Chapter 6 describes a number of useful Git tricks for rewriting history and interactively staging files — use these tools to help craft a clean and understandable history.
+Her bir commit'i mantıklı bir biçimde ayrılmış olarak yapın. Yapabiliyorsanız, değişikliklerinizi olabildiğince hafif yapın. Yani tüm haftasonu 5 sorun üzerine çalışıp da Pazartesi günü hepsini tek bir devasa commit halinde göndermeyin. Haftasonu boyunca commit yapmadıysanız bile, Pazartesi günü staging alanını kullanarak çözdüğünüz sorunların her birini mantıklı mesajlar içeren ayrı commitler haline getirin. Eğer bazı değişiklikler aynı dosyayı etkiliyorsa `git add --patch` kullanarak dosyaları kısmı olarak staginge almaya çalışın (6. bölümde bahsedeceğiz). 5 commit ya da tek commit yaptığınızda projenin sonuçtaki hali değişmez. Ama sizinle birlikte çalışanların işlerini neden zorlaştıralım ki? Bu yaklaşım aynı zamanda gerekirse değişikliklerden birini ya da birkaçını çıkarmak ya da geri çevirmek gerektiğinde de çok işe yarayacaktır. 6. Bölüm geçmişi baştan yazmak ve dosyaları interaktif olarak stage etmek için gerekli olan birçok kullanışlı Git ipuçlarını içermektedir. Temiz ve anlaşılabilir bir geçmiş oluşturmak için bu araçları kullanın.
 
-The last thing to keep in mind is the commit message. Getting in the habit of creating quality commit messages makes using and collaborating with Git a lot easier. As a general rule, your messages should start with a single line that’s no more than about 50 characters and that describes the changeset concisely, followed by a blank line, followed by a more detailed explanation. The Git project requires that the more detailed explanation include your motivation for the change and contrast its implementation with previous behavior — this is a good guideline to follow. It’s also a good idea to use the imperative present tense in these messages. In other words, use commands. Instead of "I added tests for" or "Adding tests for," use "Add tests for."
-Here is a template originally written by Tim Pope at tpope.net:
+Aklımızdan çıkarmamamız gereken son şey ise commit mesajıdır. Kaliteli ve anlaşılabilir commit mesajları yazmayı alışkanlık haline getirmek Git ile çalışmayı ve işbirliği yapmayı çok kolaylaştıracaktır. Genel bir kural olarak, mesajınız 50 karakterden uzun olmayan ve değişiklikleri kısaca anlatan bir satır ardından bir boş satır ve devamında ayrıntılı bir açıklama şeklinde olmalıdır. Git projesinde bu detaylı açıklamanızın sizi bu değişikliğe iten sebepleri ve sizin yaptığınızla önceki arasındaki farkları açıklamanız istenmektedir. Aşağıdaki örnek ilk olarak Tim Pope tarafından tpope.net'te İngilizce olarak yazılmıştır:
 
-	Short (50 chars or less) summary of changes
+	Kısa (50 ya da daha az karakter) bir özet
 
-	More detailed explanatory text, if necessary.  Wrap it to about 72
-	characters or so.  In some contexts, the first line is treated as the
-	subject of an email and the rest of the text as the body.  The blank
-	line separating the summary from the body is critical (unless you omit
-	the body entirely); tools like rebase can get confused if you run the
-	two together.
+	Gerekiyorsa, daha detaylı ve açıklayıcı bir metin. Satır uzunluğunu
+	72 karakter civarında tutmaya çalışın. İlk satırı bir e-mailin konusu
+	ve bu metni de mailin kendisi olarak düşünebilirsiniz. Boş satır
+	ise konu ve mailin metnini ayırmaktadır. Eğer detaylı metin yazıyorsanız
+	bu boş satır önemlidir çünkü kullanmadığınız durumlarda rebase gibi
+	araçlar karışık hale gelebilir.
 
-	Further paragraphs come after blank lines.
+	Yeni paragraf yazmanız gerektiğinde yine boş bir satır bırakın.
 
-	 - Bullet points are okay, too
+	 - Bullet listeler de kullanılabilir
 
-	 - Typically a hyphen or asterisk is used for the bullet, preceded by a
-	   single space, with blank lines in between, but conventions vary here
+	 - Tipik olarak bir tire ya da yıldızı takip eden bir boşluk ve metin şeklinde
+	  liste elemanları oluşturulabilir.
 
-If all your commit messages look like this, things will be a lot easier for you and the developers you work with. The Git project has well-formatted commit messages — I encourage you to run `git log --no-merges` there to see what a nicely formatted project-commit history looks like.
+Eğer tüm commit mesajlarınız böyle görünürse, herşey siz ve birlikte çalıştığınız geliştiriciler için daha kolay olacaktır. Git projesinin kendisi çok iyi formatlanmış commit mesajlarına sahiptir. İyi formatlanmış commit mesajlarına sahip bir proje geçmişinin nasıl göründüğünü görmeniz için sizi, Git projesi üzerinde `git log --no-merges` komutunu çalıştırmaya davet ediyorum.
 
-In the following examples, and throughout most of this book, for the sake of brevity I don’t format messages nicely like this; instead, I use the `-m` option to `git commit`. Do as I say, not as I do.
+Bu kitabın tamamı boyunca sadelik uğruna mesajları böyle güzel biçimde yazmayacağım. Bunun yerine `git commit` komutunu `-m` ayarı ile çağırarak mesajlarını yazacağım. İmamın dediğini yap, yaptığını yapma :)
 
-### Private Small Team ###
+### Özel(dışarıya kapalı) Küçük Takım ###
 
-The simplest setup you’re likely to encounter is a private project with one or two other developers. By private, I mean closed source — not read-accessible to the outside world. You and the other developers all have push access to the repository.
+Muhtemelen karşılacağınız en temel senaryo, özel bir projeye üzerinde çalışan iki veya daha fazla geliştiricidir. Özel derken, kapalı kaynaklı ve proje dışındaki insanlar tarafından kaynağı görülemeyen projelerden bahsediyorum. Siz ve tüm geliştiriciler projeye yazma hakkına sahipler.
 
-In this environment, you can follow a workflow similar to what you might do when using Subversion or another centralized system. You still get the advantages of things like offline committing and vastly simpler branching and merging, but the workflow can be very similar; the main difference is that merges happen client-side rather than on the server at commit time.
-Let’s see what it might look like when two developers start to work together with a shared repository. The first developer, John, clones the repository, makes a change, and commits locally. (I’m replacing the protocol messages with `...` in these examples to shorten them somewhat.)
+Bu ortamda, Subversion ya da başka bir merkezi sistemde takip ettiğiniz çalışma akışını takip edebilirsiniz. Offline commit ve büyük ölçüde daha kolay olan branchler ve birleştirmenin avantajlarını halen kullanabilirsiniz. Ama çalışma akışı halen çok benzer olabilir, en temel fark ise birleştirmelerin sunucuda olması yerine istemci tarafında commit anında olmasıdır.
+İki geliştiricinin ortak bir repoda çalışmaya başlamasıyla ne olacağına bakalım. İlk geliştirici Burak repoyu klonlar, bir değişiklik yapar ve yerel olarak commit eder. (Örnekleri kısaltmak adına protokol mesajları yerine `...` yazıyorum)
 
-	# John's Machine
+	# Burak's Machine
 	$ git clone john@githost:simplegit.git
-	Initialized empty Git repository in /home/john/simplegit/.git/
+	Initialized empty Git repository in /home/burak/simplegit/.git/
 	...
 	$ cd simplegit/
 	$ vim lib/simplegit.rb
-	$ git commit -am 'removed invalid default value'
-	[master 738ee87] removed invalid default value
+	$ git commit -am 'geçersiz varsayılan değer kaldırıldı'
+	[master 738ee87] geçersiz varsayılan değer kaldırıldı
 	 1 files changed, 1 insertions(+), 1 deletions(-)
 
-The second developer, Jessica, does the same thing — clones the repository and commits a change:
+İkinci geliştirici Nesrin de aynı şeyi yapar. Repoyu klonlar ve bir değişiklik commit eder:
 
-	# Jessica's Machine
-	$ git clone jessica@githost:simplegit.git
-	Initialized empty Git repository in /home/jessica/simplegit/.git/
+	# Nesrin's Machine
+	$ git clone nesrin@githost:simplegit.git
+	Initialized empty Git repository in /home/nesrin/simplegit/.git/
 	...
 	$ cd simplegit/
 	$ vim TODO
-	$ git commit -am 'add reset task'
-	[master fbff5bc] add reset task
+	$ git commit -am 'sıfırlama görevi eklendi'
+	[master fbff5bc] sıfırlama görevi eklendi
 	 1 files changed, 1 insertions(+), 0 deletions(-)
 
-Now, Jessica pushes her work up to the server:
+Şimdi Nesrin çalışmasını uzak sunucudaki repoya pushlar:
 
-	# Jessica's Machine
+	# Nesrin's Machine
 	$ git push origin master
 	...
-	To jessica@githost:simplegit.git
+	To nesrin@githost:simplegit.git
 	   1edee6b..fbff5bc  master -> master
 
-John tries to push his change up, too:
+Burak da kendi değişikliğini pushlamaya çalışır:
 
-	# John's Machine
+	# Burak's Machine
 	$ git push origin master
-	To john@githost:simplegit.git
+	To burak@githost:simplegit.git
 	 ! [rejected]        master -> master (non-fast forward)
-	error: failed to push some refs to 'john@githost:simplegit.git'
+	error: failed to push some refs to 'burak@githost:simplegit.git'
 
-John isn’t allowed to push because Jessica has pushed in the meantime. This is especially important to understand if you’re used to Subversion, because you’ll notice that the two developers didn’t edit the same file. Although Subversion automatically does such a merge on the server if different files are edited, in Git you must merge the commits locally. John has to fetch Jessica’s changes and merge them in before he will be allowed to push:
+Burak'a izin verilmez çünkü o esnada Nesrin push yapmıştır. Eğer önceden Subversion kullandıysanız bunu anlamanız önemlidir. 2 geliştirici farklı dosyaları düzenlemiştir. Eğer farklı dosyalarda değişiklik yapıldıysa Subversion otomatik olarak sunucuda bir birleştirme yapacaktır. Git'te ise commitleri kendi yerelinizde birleştirmelisiniz. Burak push yapmadan önce Nesrin'in değişikliklerini kendisine çekmeli, ve kendi değişiklikleriyle birleştirmelidir:
 
 	$ git fetch origin
 	...
-	From john@githost:simplegit
+	From burak@githost:simplegit
 	 + 049d078...fbff5bc master     -> origin/master
 
-At this point, John’s local repository looks something like Figure 5-4.
+Bu noktada Burak'ın yerel reposu Resım 5-4'teki gibi gorunecektir.
 
 Insert 18333fig0504.png
-Figure 5-4. John’s initial repository.
+Figure 5-4. Burak'ın baştakı reposu.
 
-John has a reference to the changes Jessica pushed up, but he has to merge them into his own work before he is allowed to push:
+Artık Burak Nesrin'in yaptığı değişikliklerin bir referansına sahip. Şimdi kendi değişiklikleri ile Nesrin'in değişikliklerini birleştirip sonrasında repoya push edebilir.
 
 	$ git merge origin/master
 	Merge made by recursive.
 	 TODO |    1 +
 	 1 files changed, 1 insertions(+), 0 deletions(-)
 
-The merge goes smoothly — John’s commit history now looks like Figure 5-5.
+Eğer birleştirme sorunsuz giderse Burak'ın commit geçmişi Resim 5-5deki gibi olacaktır.
 
 Insert 18333fig0505.png
-Figure 5-5. John’s repository after merging `origin/master`.
+Figure 5-5. `origin/master` ile birleştirdikten sonra Burak'ın reposu.
 
-Now, John can test his code to make sure it still works properly, and then he can push his new merged work up to the server:
+Şimdi, Burak herşeyin hala düzgün olduğundan emin olmak için test edip ardından değişikliklerini sunucuya gönderebilir:
 
 	$ git push origin master
 	...
-	To john@githost:simplegit.git
+	To burak@githost:simplegit.git
 	   fbff5bc..72bbc59  master -> master
 
-Finally, John’s commit history looks like Figure 5-6.
+Sonuç olarak Burak'ın commit geçmişi Resim 5-6daki gibi görünür.
 
 Insert 18333fig0506.png
-Figure 5-6. John’s history after pushing to the origin server.
+Figure 5-6. Origin sunucuya gönderdikten sonra Burak'ın commit geçmişi.
 
-In the meantime, Jessica has been working on a topic branch. She’s created a topic branch called `issue54` and done three commits on that branch. She hasn’t fetched John’s changes yet, so her commit history looks like Figure 5-7.
+Aynı esnada Nesrin de bir konu branchinde çalışmaktadır. `issue54` isminde bir branch oluşturmuş ve bu branche 3 commit yapmıştır ve henüz Burak'ın yaptığı değişiklileri kendisine çekmemiştir. Commit geçmişi Resim 5-7deki gibidir.
 
 Insert 18333fig0507.png
-Figure 5-7. Jessica’s initial commit history.
+Figure 5-7. Nesrin'in baştaki commit geçmişi.
 
-Jessica wants to sync up with John, so she fetches:
+Nesrin Burak ile senkronize olmak ister ve fetch eder:
 
-	# Jessica's Machine
+	# Nesrin's Machine
 	$ git fetch origin
 	...
-	From jessica@githost:simplegit
+	From nesrin@githost:simplegit
 	   fbff5bc..72bbc59  master     -> origin/master
 
-That pulls down the work John has pushed up in the meantime. Jessica’s history now looks like Figure 5-8.
+Bu Burak'ın pushladığı çalışmaları çeker. Jessica'nın geçmişi şimdi Resim 5-8deki gibidir.
 
 Insert 18333fig0508.png
-Figure 5-8. Jessica’s history after fetching John’s changes.
+Figure 5-8. Burak'ın değişikliklerini fetch ettikten sonra Nesrin'in geçmişi.
 
-Jessica thinks her topic branch is ready, but she wants to know what she has to merge her work into so that she can push. She runs `git log` to find out:
+Nesrin kendi branchinin hazır olduğunu düşünür, fakat neleri birleştirmesi gerektiğini görmek istemektedir. `git log` çalıştırarak bunu görebilir:
 
 	$ git log --no-merges origin/master ^issue54
 	commit 738ee872852dfaa9d6634e0dea7a324040193016
-	Author: John Smith <jsmith@example.com>
+	Author: Burak Can <bcan@example.com>
 	Date:   Fri May 29 16:01:27 2009 -0700
 
-	    removed invalid default value
+	    geçersiz varsayılan değer kaldırıldı
 
 Now, Jessica can merge her topic work into her `master` branch, merge John’s work (`origin/master`) into her `master` branch, and then push back to the server again. First, she switches back to her `master` branch to integrate all this work:
 
