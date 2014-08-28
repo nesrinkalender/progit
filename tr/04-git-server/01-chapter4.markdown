@@ -58,28 +58,28 @@ Ya da SSH için kısaca scp-like yazımını kullanabilirsiniz :
 
 	$ git clone user@server:project.git
 
-You can also not specify a user, and Git assumes the user you’re currently logged in as.
 Siz bir kullanıcı belirlemezseniz, Git geçerli oturum açmış olan kullanıcıyı varsayar.
 
 #### Artıları ####
 
-SSH kullanmanızın çok fazla artıları vardır. İlk olarak, temelde kullandığınız bir ağ üzerinden doğrulanmış bir kimlik ile dosyalara yazma erişiminiz olur. Second, SSH is relatively easy to set up — SSH daemons are commonplace, many network admins have experience with them, and many OS distributions are set up with them or have tools to manage them. Next, access over SSH is secure — all data transfer is encrypted and authenticated. Last, like the Git and Local protocols, SSH is efficient, making the data as compact as possible before transferring it.
+SSH kullanmanızın çok fazla artıları vardır. İlk olarak, temelde kullandığınız bir ağ üzerinden doğrulanmış bir kimlik ile dosyalara yazma erişiminiz olur. İkincisi, SSH kurmak kolaydır, birçok ağ yöneticileri SHH ile ilgili deneyime sahiptir ve birçok işletim sistemi dağıtımlarının SSH kurmak ve yönetmek için araçları vardır. Bir diğre SSH üzerinden tüm veri transferi şifrelenir ve doğrulanır. Last, like the Git and Local protocols, SSH is efficient, making the data as compact as possible before transferring it.
 
 #### Eksileri ####
 
-The negative aspect of SSH is that you can’t serve anonymous access of your repository over it. People must have access to your machine over SSH to access it, even in a read-only capacity, which doesn’t make SSH access conducive to open source projects. If you’re using it only within your corporate network, SSH may be the only protocol you need to deal with. If you want to allow anonymous read-only access to your projects, you’ll have to set up SSH for you to push over but something else for others to pull over.
+Negatif yönlerinden bir tanesi reponuza anonim erişim sağlanamaz. İnsanların sizin open source projenize erişebilmesi için SSH üzerinden erişimleri olması gerekmektedir. If you’re using it only within your corporate network, SSH may be the only protocol you need to deal with. Eğer bir projeye anonim erişimi vermek istiyorsanız push ve pull işlerimleri için SSH kurmanız gerekecektir.
 
 ### Git Protokolü ###
 
-Next is the Git protocol. This is a special daemon that comes packaged with Git; it listens on a dedicated port (9418) that provides a service similar to the SSH protocol, but with absolutely no authentication. In order for a repository to be served over the Git protocol, you must create the `git-daemon-export-ok` file — the daemon won’t serve a repository without that file in it — but other than that there is no security. Either the Git repository is available for everyone to clone or it isn’t. This means that there is generally no pushing over this protocol. You can enable push access; but given the lack of authentication, if you turn on push access, anyone on the internet who finds your project’s URL could push to your project. Suffice it to say that this is rare.
+Sonraki Git Protokolüdür. Git ile paketlenmiş olarak gelen servistir. SSH protokolüne benzer bir hizmet sunar 9418 portunu dinler fakat kimlik doğrulaması gerektirmez. In order for a repository to be served over the Git protocol, you must create the `git-daemon-export-ok` file — the daemon won’t serve a repository without that file in it — but other than that there is no security. Either the Git repository is available for everyone to clone or it isn’t. This means that there is generally no pushing over this protocol. You can enable push access; but given the lack of authentication, if you turn on push access, anyone on the internet who finds your project’s URL could push to your project. Suffice it to say that this is rare.
 
 #### Artıları ####
 
-The Git protocol is the fastest transfer protocol available. If you’re serving a lot of traffic for a public project or serving a very large project that doesn’t require user authentication for read access, it’s likely that you’ll want to set up a Git daemon to serve your project. It uses the same data-transfer mechanism as the SSH protocol but without the encryption and authentication overhead.
+Git Protokol'ü mevcut en hızlı transfer protokolüdür. Eğer kimlik doğrulaması gerektirmeyen büyük bir projeniz varsa Git protokolü kullanmak doğru seçim olacaktır. Git Protokol'ü şifreleme ve kimlik doğrulama olmadan aynı mekanızmayı kullanır.
 
 #### Eksileri ####
 
-The downside of the Git protocol is the lack of authentication. It’s generally undesirable for the Git protocol to be the only access to your project. Generally, you’ll pair it with SSH access for the few developers who have push (write) access and have everyone else use `git://` for read-only access.
+Git Protokolü'nün olumsuz yönlerinden bir tanesi doğrulama olmamasıdır. Projeye tek erişim olması istenmeyen bir durumdur. Genellik push (yazma) erişimine sahip geliştiriciler için SSH ile eşleştirme gerekir ve herkes read-only için `git://` kullanır.
+
 It’s also probably the most difficult protocol to set up. It must run its own daemon, which is custom — we’ll look at setting one up in the “Gitosis” section of this chapter — it requires `xinetd` configuration or the like, which isn’t always a walk in the park. It also requires firewall access to port 9418, which isn’t a standard port that corporate firewalls always allow. Behind big corporate firewalls, this obscure port is commonly blocked.
 
 ### HTTP / S Protokolü ###
