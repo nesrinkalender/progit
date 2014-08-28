@@ -1,40 +1,40 @@
-# Distributed Git #
+# Dağıtık Git #
 
-Now that you have a remote Git repository set up as a point for all the developers to share their code, and you’re familiar with basic Git commands in a local workflow, you’ll look at how to utilize some of the distributed workflows that Git affords you.
+Artık tüm developerların kodunu paylaşacağı bir uzak git reposuna sahipsiniz ve yerel çalışma akışınızda kullanacağınız temel Git komutlarına aşinasınız. Artık Git'in size sağladığı bazı dağıtık çalışma akışlarını nasıl kullanacağımıza bakacacağız.
 
-In this chapter, you’ll see how to work with Git in a distributed environment as a contributor and an integrator. That is, you’ll learn how to contribute code successfully to a project and make it as easy on you and the project maintainer as possible, and also how to maintain a project successfully with a number of developers contributing.
+Bu bölümde, dağıtık bir Git ortamında katılımcı ve koordinatör olarak nasıl çalışacağınızı göreceksiniz. Bir çok geliştiricinin çalıştığı projelere nasıl katkı sağlayacağınızı ve projenin sürdürülebilirliğini nasıl sağlayacağınızı öğreneceksiniz.
 
-## Distributed Workflows ##
+## Dağıtık Çalışma Akışları ##
 
-Unlike Centralized Version Control Systems (CVCSs), the distributed nature of Git allows you to be far more flexible in how developers collaborate on projects. In centralized systems, every developer is a node working more or less equally on a central hub. In Git, however, every developer is potentially both a node and a hub — that is, every developer can both contribute code to other repositories and maintain a public repository on which others can base their work and which they can contribute to. This opens a vast range of workflow possibilities for your project and/or your team, so I’ll cover a few common paradigms that take advantage of this flexibility. I’ll go over the strengths and possible weaknesses of each design; you can choose a single one to use, or you can mix and match features from each.
+Merkezi Versiyon Kontrol Sistemlerinden (CVCSs) farklı olarak, Git'in dağıtık yapısı geliştiricilerin projelerde nasıl işbirliği yapacağı konusunda daha esnek davranmanıza izin verir. Merkezi sistemlerde, her bir geliştirici merkez çevresinde az veya çok çalışan bir noktacıktır. Git'te ise; her bir geliştirici potansiyel olarak bir noktacık veya bir merkez olabilir. Her bir geliştirici başka repolar üzerindeki kodlara katkı sağlayabilir ve aynı zamanda başkalarının katkı sağladığı bir reponun koordinatörlüğünü üstlenebilir. Bu takımınıza ve projenize sonsuz sayıda çalışma akışı için imkan sağlar. Burada bu esnekliğin avantajlarını kullanan bazı çok kullanılan çalışma tasarım desenlerinden(pattern) bahsedeceğim. Her bir desenin güçlü ve zayıf yanlarının üzerinden geçeceğim. Böylece bunlardan birini seçebilirsiniz ya da ihtiyaçlarınıza göre şekillendirerek/karıştırarak kullanabilirsiniz.
 
-### Centralized Workflow ###
+### Merkezi Çalışma Akışı (Centralized Workflow) ###
 
-In centralized systems, there is generally a single collaboration model—the centralized workflow. One central hub, or repository, can accept code, and everyone synchronizes their work to it. A number of developers are nodes — consumers of that hub — and synchronize to that one place (see Figure 5-1).
+Merkezi sistemlerde, genellikle tek bir katılım modeli vardır: Merkezi Çalışma Akışı. Kod katılımını kabul edebilen tek bir merkez veya repo bulunur ve herkes çalışmasını bu merkezle senkronize eder. Geliştiriciler bu merkezin çevresindeki noktacıklardır ve bu tek merkeze senkronize olurlar (Resim 5-1).
 
 Insert 18333fig0501.png
-Figure 5-1. Centralized workflow.
+Resim 5-1. Merkezi çalışma akışı.
 
-This means that if two developers clone from the hub and both make changes, the first developer to push their changes back up can do so with no problems. The second developer must merge in the first one’s work before pushing changes up, so as not to overwrite the first developer’s changes. This concept is true in Git as it is in Subversion (or any CVCS), and this model works perfectly in Git.
+Bu şu anlama gelir; eğer iki geliştirici bir merkezden repoyu klonlar ve değişiklikler yapar, ardından ilk geliştirici değişikliklerini merkeze gönderirse herhangi bir sıkıntı olmaz. Ancak ikinci geliştirici ilk geliştiricinin değişiklilerinin üzerine yazmadığından emin olmak için değişikliklerini göndermeden önce merkezi reponun son halini kendisine almalı ve kendi değişiklikleriyle birleştirmelidir. Bu konsept Git ya da Subversion (ya da herhangi bir  CVCS)'de mevcuttur, ve Git'de çok iyi çalışır.
 
-If you have a small team or are already comfortable with a centralized workflow in your company or team, you can easily continue using that workflow with Git. Simply set up a single repository, and give everyone on your team push access; Git won’t let users overwrite each other. If one developer clones, makes changes, and then tries to push their changes while another developer has pushed in the meantime, the server will reject that developer’s changes. They will be told that they’re trying to push non-fast-forward changes and that they won’t be able to do so until they fetch and merge.
-This workflow is attractive to a lot of people because it’s a paradigm that many are familiar and comfortable with.
+Eğer küçük bir takımsanız veya merkezi çalışma akışından hali hazırda memnunsanız bu akışı Git ile kullanmaya devam edebilirsiniz. Tek bir repo oluşturun, ve takımdaki herkese bu repoya push edebilme izni verin; Git geliştiricilerin birbirlerinin değişikliklerini ezmesine izin vermeyecektir. Eğer bir geliştirici repoyu klonlar, değişiklikler yapar ve ardından değişikliklerini push etmeye çalışırsa ve o esnada başka bir geliştirici değişiklikler yapıp push ettiyse git sunucusu değişiklikleri reddedecektir. non-fast-forward(hızlı-ileri-olmayan?) değişiklikler yaptığı şeklinde bir hata alacak ve repodan fetch ve merge yapmadığı sürece değişikliklerini gönderemeyecektir.
+Bu paradigma birçok insanı kendine çeker çünkü birçok kişiye tanıdık gelen ve rahat olabildikleri bir konsepttir.
 
-### Integration-Manager Workflow ###
+### Entegrasyon Yöneticili Çalışma Akışı (Integration-Manager Workflow) ###
 
-Because Git allows you to have multiple remote repositories, it’s possible to have a workflow where each developer has write access to their own public repository and read access to everyone else’s. This scenario often includes a canonical repository that represents the "official" project. To contribute to that project, you create your own public clone of the project and push your changes to it. Then, you can send a request to the maintainer of the main project to pull in your changes. They can add your repository as a remote, test your changes locally, merge them into their branch, and push back to their repository. The process works as follows (see Figure 5-2):
+Git birden çok uzak repoyla çalışmanıza izin verdiğinden, her geliştiricinin kendi reposuna yazma izni ve diğer tüm repolara okuma izni olan bir çalışma akışı mümkündür. Bu senaryoda genellikle projeyi "resmi" olarak temsil eden ve doğruluğndan emin olunan bir repo bulunur. Bu repoya katkıda bulunmak için reponun kendinize ait olan klonun oluşturur ve kendi reponuz üzerinde çalışırsınız. Sonrasında ana proje reposunu yöneten kişiye sizin reponuzdaki değişiklikleri ana repoya alması için bir istekte bulunursunuz. Yönetici sizin reponuzu kendisine uzak sunucu olarak ekler, değişikliklerinizi test eder, ana repodaki branch ile birleştirir ve ana repoya gönderir. Bu işlem aşağıdaki şu şekilde ilerler (Resim 5-2):
 
-1. The project maintainer pushes to their public repository.
-2. A contributor clones that repository and makes changes.
-3. The contributor pushes to their own public copy.
-4. The contributor sends the maintainer an e-mail asking them to pull changes.
-5. The maintainer adds the contributor’s repo as a remote and merges locally.
-6. The maintainer pushes merged changes to the main repository.
+1. Yönetici projenin genel reposuna push eder.
+2. Geliştirici o repoyu kendisine klonlar ve değişiklilerini yapar.
+3. Geliştirici değişikliklerini kendi reposuna gönderir.
+4. Geliştirici yöneticiye değişiklilerini çekmesi için bir istekte bulunur (email vs.).
+5. Yönetici geliştiricinin reposunu kendisine bir remote olarak ekler ve local olarak değişiklikleri birleştirir.
+6. Yönetici birleştirilmiş değişiklikleri ana repoya gönderir.
 
 Insert 18333fig0502.png
-Figure 5-2. Integration-manager workflow.
+Figure 5-2. Entegrasyon Yöneticili Çalışma Akışı
 
-This is a very common workflow with sites like GitHub, where it’s easy to fork a project and push your changes into your fork for everyone to see. One of the main advantages of this approach is that you can continue to work, and the maintainer of the main repository can pull in your changes at any time. Contributors don’t have to wait for the project to incorporate their changes — each party can work at their own pace.
+Bir projeyi fork etmek ve o fork üzerinde çalışmak gibi işlemlerin kolay olduğu, Github gibi sitelerle birlikte bu çok kullanılan bir çalışma akışıdır. Bu yaklaşımın ana kazanımlarından biri geliştirici çalışmaya devam ederken yönetici geliştiricinin değişikliklerini herhangi bir zamanda ana repoya alabilir. Katılımcılar projenin kendi değişikliklerini dahil etmesini beklemek zorunda değildir. Herkes kendi alanında çalışabilir.
 
 ### Dictator and Lieutenants Workflow ###
 
