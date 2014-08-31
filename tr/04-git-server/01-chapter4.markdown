@@ -78,13 +78,13 @@ Git Protokol'ü mevcut en hızlı transfer protokolüdür. Eğer kimlik doğrula
 
 #### Eksileri ####
 
-Git Protokolü'nün olumsuz yönlerinden bir tanesi doğrulama olmamasıdır. Projeye tek erişim olması istenmeyen bir durumdur. Genellik push (yazma) erişimine sahip geliştiriciler için SSH ile eşleştirme gerekir ve herkes read-only için `git://` kullanır.
+Git Protokolü'nün olumsuz yönlerinden bir tanesi doğrulama olmamasıdır. Projeye tek erişim olması istenmeyen bir durumdur. Genellik push (yazma) erişimine sahip geliştiriciler için SSH ile eşleştirme gerekir ve herkes  `git://` kullanır.
 
-It’s also probably the most difficult protocol to set up. It must run its own daemon, which is custom — we’ll look at setting one up in the “Gitosis” section of this chapter — it requires `xinetd` configuration or the like, which isn’t always a walk in the park. It also requires firewall access to port 9418, which isn’t a standard port that corporate firewalls always allow. Behind big corporate firewalls, this obscure port is commonly blocked.
+Muhtemelen kurulumu en zor olan protokoldür. It must run its own daemon, which is custom — bu bölümün kurulumuna “Gitosis” kısmında değineceğiz — it requires `xinetd` configuration or the like, which isn’t always a walk in the park. 9418 portuna erişebilmek için bir güvenlik duvarı karşınıza çıkacaktır bu port genellikle izin verilen bir port değildir. Büyük kurumların arkasındaki firewall'lar genellikle bu portu tanımaz ve bloke ederler.
 
 ### HTTP / S Protokolü ###
 
-Last we have the HTTP protocol. The beauty of the HTTP or HTTPS protocol is the simplicity of setting it up. Basically, all you have to do is put the bare Git repository under your HTTP document root and set up a specific `post-update` hook, and you’re done (See Chapter 7 for details on Git hooks). At that point, anyone who can access the web server under which you put the repository can also clone your repository. To allow read access to your repository over HTTP, do something like this:
+Son olarak HTTP / S Protokolü. Kurulum basitliği açısından en güzeli HTTP ya da HTTPS protokolüdür. Basically, all you have to do is put the bare Git repository under your HTTP document root and set up a specific `post-update` hook, and you’re done (Git hook hakkında bilgi için 7. bölüme bakınız). At that point, anyone who can access the web server under which you put the repository can also clone your repository. To allow read access to your repository over HTTP, do something like this:
 
 	$ cd /var/www/htdocs/
 	$ git clone --bare /path/to/git_project gitproject.git
