@@ -1,12 +1,12 @@
-# Serverda Git #
+# Uzak Serverda Git #
 
-At this point, you should be able to do most of the day-to-day tasks for which you’ll be using Git. However, in order to do any collaboration in Git, you’ll need to have a remote Git repository. Although you can technically push changes to and pull changes from individuals’ repositories, doing so is discouraged because you can fairly easily confuse what they’re working on if you’re not careful. Furthermore, you want your collaborators to be able to access the repository even if your computer is offline — having a more reliable common repository is often useful. Therefore, the preferred method for collaborating with someone is to set up an intermediate repository that you both have access to, and push to and pull from that. We’ll refer to this repository as a "Git server"; but you’ll notice that it generally takes a tiny amount of resources to host a Git repository, so you’ll rarely need to use an entire server for it.
+Şu anda, Git kullanırken günlük ihtiyacınız olacak işleri yapabiliyor olmalısınız. Ancak, Git üzerinde takım arkadaşlarınızla işbirliğinde bulunmak için bir uzak Git reposuna ihtiyacınız var. Diğer insanların yerel repoları üzerinde pull ya da push işlemleri yapmanız teknik olarak mümkün olsa da, bunu yapmak cesurcadır çünkü dikkatli olmazsanız insanların çalışmalarını karman çorman etmek oldukça kolaydır. Bunun dışında, ulaşmak istediğiniz Git reposunun sahibi offline olsa da ulaşabileceğiniz ve doğruluğu daha güvenilir ortak bir repo genellikle kullanışlı bir seçenektir. Bunun için, takım arkadaşlarıyla işbirliğinde tercih edilen en yaygın yöntem, takımdaki insanların yazma ve okuma izinlerinin olduğu ortak bir repo kullanmaktır. Bu ortak repoya bundan sonra "Git Sunucusu" diyeceğiz. Fakat yakında farkedeceğiniz üzere Git çok az sistem kaynağı kullanır ve bunun için bütün bir sunucu kullanmaya genelde gerek olmaz.
 
-Running a Git server is simple. First, you choose which protocols you want your server to communicate with. The first section of this chapter will cover the available protocols and the pros and cons of each. The next sections will explain some typical setups using those protocols and how to get your server running with them. Last, we’ll go over a few hosted options, if you don’t mind hosting your code on someone else’s server and don’t want to go through the hassle of setting up and maintaining your own server.
+Bir Git Suncusu çalıştırmak kolaydır. Öncelikle, sunucunuzla hangi protokollerden iletişim kuracağınızı belirlemelisiniz. Bu bölümün ilk kısmında mevcut protokoller ve bunları artıları/eksilerinden bahsedeceğiz. Gelecek bölümlerde ise bu protokollerı kullanarak bazı tipik kurulumlarla sunucunuzu nasıl ayağa kaldıracağınızı anlatacağız. Son olarak, bazı hosted(3. kişiler tarafından barındırılan) servislerden bahsedeceğiz. Eger kodunuzun başka insanların sunucularında barınması sizin için problem değilse ve bakım-kurulum işleri ile uğraşmak istemiyorsanız bu seçenekleri de değerlendirebilirsiniz.
 
-If you have no interest in running your own server, you can skip to the last section of the chapter to see some options for setting up a hosted account and then move on to the next chapter, where we discuss the various ins and outs of working in a distributed source control environment.
+Eğer kendi sunucunuzu kurmak ile ilgilenmiyorsanız, doğrudan bu bölümün son kısmına geçebilir ve kullanabileceğiniz bazı servisleri görebilirsiniz. Sonrasında dağıtık kaynak kontrol ortamlarında çalışmanın getiri ve götürülerinden bahsedeceğimiz bir sonraki bölüme geçebilirsiniz.
 
-A remote repository is generally a _bare repository_ — a Git repository that has no working directory. Because the repository is only used as a collaboration point, there is no reason to have a snapshot checked out on disk; it’s just the Git data. In the simplest terms, a bare repository is the contents of your project’s `.git` directory and nothing else.
+Bir uzak repo _çıplak(bare) repo_ genellikle hiç bir şey eklenmemiş, boş bir haldedir. Repo yalnızca işbirliği noktası olarak kullanılacağından, projenin disk üzerinde bir kopyasını tutmak anlamsızdır. Yalnızca Git bilgisi yeterlidir. En basit anlatımıyla, çıplak repo projeinizin yalnızca `.git` klasörünü içer
 
 ## Protokoller ##
 
@@ -294,7 +294,7 @@ What does this `post-update` hook do? It looks basically like this:
 	#
 	# To enable this hook, rename this file to "post-update".
 	#
-	
+
 	exec git-update-server-info
 
 This means that when you push to the server via SSH, Git will run this command to update the files needed for HTTP fetching.
