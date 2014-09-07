@@ -84,7 +84,7 @@ Muhtemelen kurulumu en zor olan protokoldür. It must run its own daemon, which 
 
 ### HTTP / S Protokolü ###
 
-Son olarak HTTP / S Protokolü. Kurulum basitliği açısından en güzeli HTTP ya da HTTPS protokolüdür. Basically, all you have to do is put the bare Git repository under your HTTP document root and set up a specific `post-update` hook, and you’re done (Git hook hakkında bilgi için 7. bölüme bakınız). At that point, anyone who can access the web server under which you put the repository can also clone your repository. To allow read access to your repository over HTTP, do something like this:
+Son olarak HTTP / S Protokolü. Kurulum basitliği açısından en güzeli HTTP ya da HTTPS protokolüdür. Basically, all you have to do is put the bare Git repository under your HTTP document root and set up a specific `post-update` hook, and you’re done (Git hook hakkında bilgi için 7. bölüme bakınız). At that point, anyone who can access the web server under which you put the repository can also clone your repository. HTTP üzerinden reponuza erişim izni vermek için:
 
 	$ cd /var/www/htdocs/
 	$ git clone --bare /path/to/git_project gitproject.git
@@ -92,25 +92,25 @@ Son olarak HTTP / S Protokolü. Kurulum basitliği açısından en güzeli HTTP 
 	$ mv hooks/post-update.sample hooks/post-update
 	$ chmod a+x hooks/post-update
 
-That’s all. The `post-update` hook that comes with Git by default runs the appropriate command (`git update-server-info`) to make HTTP fetching and cloning work properly. This command is run when you push to this repository over SSH; then, other people can clone via something like
+That’s all. The `post-update` hook that comes with Git by default runs the appropriate command (`git update-server-info`) to make HTTP fetching and cloning work properly. SSH üzerinden bir repo pushlamak için bu komut çalıştırılır, ardından diğer insanlarda bu komut ile clonelayabilir.
 
 	$ git clone http://example.com/gitproject.git
 
-In this particular case, we’re using the `/var/www/htdocs` path that is common for Apache setups, but you can use any static web server — just put the bare repository in its path. The Git data is served as basic static files (see Chapter 9 for details about exactly how it’s served).
+In this particular case, we’re using the `/var/www/htdocs` path that is common for Apache setups, but you can use any static web server — just put the bare repository in its path. Git verileri statik dosyalar olarak tutulur. (detaylar için bölüm 9'a bakınız).
 
-It’s possible to make Git push over HTTP as well, although that technique isn’t as widely used and requires you to set up complex WebDAV requirements. Because it’s rarely used, we won’t cover it in this book. If you’re interested in using the HTTP-push protocols, you can read about preparing a repository for this purpose at `http://www.kernel.org/pub/software/scm/git/docs/howto/setup-git-server-over-http.txt`. One nice thing about making Git push over HTTP is that you can use any WebDAV server, without specific Git features; so, you can use this functionality if your web-hosting provider supports WebDAV for writing updates to your web site.
+HTTP üzerinden push yapmak mümkündür, yaygın olarak kullanılan bir teknik değildir ve karışık WebDAV gereksinimleri kurmayı gerektirir. Nadiren kullanıldığı için kitapta yer almıyor. Eğer HTTP ile push yapmak ile ilgileniyorsanız konu ile ilgili `http://www.kernel.org/pub/software/scm/git/docs/howto/setup-git-server-over-http.txt` linkini inceleyebilirsiniz. Bir diğer nokta eğer sunucunuz yazma ve güncelleme işlemleri için WebDAV destekliyorsa, belirli Git özellikler olmadan, herhangi bir WebDAV sunucusu kullanabilirsiniz;
 
 #### Artıları ####
 
-The upside of using the HTTP protocol is that it’s easy to set up. Running the handful of required commands gives you a simple way to give the world read access to your Git repository. It takes only a few minutes to do. The HTTP protocol also isn’t very resource intensive on your server. Because it generally uses a static HTTP server to serve all the data, a normal Apache server can serve thousands of files per second on average — it’s difficult to overload even a small server.
+En temel artısı kurulumu kolaydır. Sunduğu bir çok komut ile  Git reponuza ulşamak için kolaylıklar sağlar. Ve bunu yapmak sadece birkaç dakika sürer. HTTP protokolü sunucunuz üzerinde bir yoğunluk yapmaz. Çünkü genellikle statik bir HTTP sunucusu kullanır, bir Apache server saniye binlerce dosya transfer edebilir fakat küçük sunucular için bu zor olabilir.
 
 You can also serve your repositories read-only over HTTPS, which means you can encrypt the content transfer; or you can go so far as to make the clients use specific signed SSL certificates. Generally, if you’re going to these lengths, it’s easier to use SSH public keys; but it may be a better solution in your specific case to use signed SSL certificates or other HTTP-based authentication methods for read-only access over HTTPS.
 
-Another nice thing is that HTTP is such a commonly used protocol that corporate firewalls are often set up to allow traffic through this port.
+Bir diğer güzel üzelliği de HTTP protokolü firewall tarafından tanınan yaygın bir protokoldür.
 
 #### Eksileri ####
 
-The downside of serving your repository over HTTP is that it’s relatively inefficient for the client. It generally takes a lot longer to clone or fetch from the repository, and you often have a lot more network overhead and transfer volume over HTTP than with any of the other network protocols. Because it’s not as intelligent about transferring only the data you need — there is no dynamic work on the part of the server in these transactions — the HTTP protocol is often referred to as a _dumb_ protocol. For more information about the differences in efficiency between the HTTP protocol and the other protocols, see Chapter 9.
+HTTP üzerinden reponuz için hizmet almanızın olumsuz yanı verimsiz olmasıdır. Genellikle klonlama işlemleri uzun sürer ve diğer ağ protokollerinden daha fazla ağ hacmi vardır. Because it’s not as intelligent about transferring only the data you need — there is no dynamic work on the part of the server in these transactions — the HTTP protocol is often referred to as a _dumb_ protocol. HTTP protokolü ve diğer protokoller hakkında verimlilik karşılaştırmaları için bölüm )'a bakınız.
 
 ## Getting Git on a Server ##
 
