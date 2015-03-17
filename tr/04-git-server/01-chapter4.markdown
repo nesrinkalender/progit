@@ -71,3 +71,23 @@ Negatif yönlerinden bir tanesi reponuza anonim erişim sağlanamaz. İnsanları
 ### Git Protokolü ###
 
 Sonraki Git Protokolüdür. Git ile paketlenmiş olarak gelen servistir. SSH protokolüne benzer bir hizmet sunar 9418 portunu dinler fakat kimlik doğrulaması gerektirmez. Bir reponun Git protokolü üzerinden sunulması için, 'git-daemon-export-ok' dosyasını oluşturmalısınız - Daemon, içinde bu dosya olmayan bir git reposunu sunmaz. - fakat bunun dışında, güvenlik yoktur. Ya clonelanabilir bir Git reposu mevcuttur ya da herkes clonelayamaz. Bu, genel olarak bu protokol üzerinden psuh yapıldığı anlamına gelir. Push erişimi sağlar; fakat eksik bir kimlik doğrulamada internet üzerinde projenizin URL'i bulunur ve push edilebilir. Fakat bu durum çok nadir olur.
+
+#### Artıları ####
+
+Git Protokol'ü mevcut en hızlı transfer protokolüdür. Eğer kimlik doğrulaması gerektirmeyen büyük bir projeniz varsa Git protokolü kullanmak doğru seçim olacaktır. Git Protokol'ü şifreleme ve kimlik doğrulama olmadan aynı mekanızmayı kullanır.
+
+#### Eksileri ####
+
+Git Protokolü'nün olumsuz yönlerinden bir tanesi doğrulama olmamasıdır. Projeye tek erişim olması istenmeyen bir durumdur. Genellik push (yazma) erişimine sahip geliştiriciler için SSH ile eşleştirme gerekir ve herkes  `git://` kullanır.
+
+Muhtemelen kurulumu en zor olan protokoldür. It must run its own daemon, which is custom — bu bölümün kurulumuna “Gitosis” kısmında değineceğiz — it requires `xinetd` configuration or the like, which isn’t always a walk in the park. 9418 portuna erişebilmek için bir güvenlik duvarı karşınıza çıkacaktır bu port genellikle izin verilen bir port değildir. Büyük kurumların arkasındaki firewall'lar genellikle bu portu tanımaz ve bloke ederler.
+
+### HTTP / S Protokolü ###
+
+Son olarak HTTP / S Protokolü. Kurulum basitliği açısından en güzeli HTTP ya da HTTPS protokolüdür. Basically, all you have to do is put the bare Git repository under your HTTP document root and set up a specific `post-update` hook, and you’re done (Git hook hakkında bilgi için 7. bölüme bakınız). At that point, anyone who can access the web server under which you put the repository can also clone your repository. HTTP üzerinden reponuza erişim izni vermek için:
+
+	$ cd /var/www/htdocs/
+	$ git clone --bare /path/to/git_project gitproject.git
+	$ cd gitproject.git
+	$ mv hooks/post-update.sample hooks/post-update
+
